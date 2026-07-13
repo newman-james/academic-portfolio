@@ -9,7 +9,7 @@ function Root() {
   return (
     <GlobalTheme theme={theme}>
       <div className={`theme-root portfolio-theme cds--${theme}`} data-carbon-theme={theme}>
-        <BrowserRouter>
+        <BrowserRouter basename={import.meta.env.BASE_URL}>
           <App />
         </BrowserRouter>
       </div>
