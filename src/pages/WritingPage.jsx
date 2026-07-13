@@ -2,7 +2,7 @@ import { Button, Column, Grid, InlineNotification, Tag, Tile } from '@carbon/rea
 import { ArrowRight, Download } from '@carbon/icons-react'
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
-import { visibleWriting } from '../content/collections.js'
+import { allWriting, visibleWriting } from '../content/collections.js'
 import MarkdownArticle from '../components/MarkdownArticle.jsx'
 import { siteDescription } from '../data/site.js'
 import useDocumentMeta from '../hooks/useDocumentMeta.js'
@@ -44,7 +44,8 @@ function WritingPage({ printMode = false }) {
   const [searchParams] = useSearchParams()
   const [exportState, setExportState] = useState('idle')
   const [exportError, setExportError] = useState('')
-  const orderedWriting = useMemo(() => sortByDateDescending(visibleWriting), [])
+  const availableWriting = visibleWriting.length ? visibleWriting : allWriting
+  const orderedWriting = useMemo(() => sortByDateDescending(availableWriting), [availableWriting])
   const selectedEntry = useMemo(
     () => orderedWriting.find((entry) => entry.slug === slug) ?? orderedWriting[0] ?? null,
     [orderedWriting, slug],
