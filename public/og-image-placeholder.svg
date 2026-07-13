@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#161616" />
+  <rect x="72" y="72" width="1056" height="486" fill="#262626" rx="24" />
+  <text x="96" y="204" fill="#f4f4f4" font-family="Georgia, serif" font-size="56">
+    Student Name
+  </text>
+  <text x="96" y="286" fill="#c6c6c6" font-family="Georgia, serif" font-size="34">
+    Academic writing portfolio
+  </text>
+  <text x="96" y="370" fill="#8d8d8d" font-family="Georgia, serif" font-size="26">
+    Placeholder Open Graph image for essays, reading notes and subject exploration.
+  </text>
+</svg>
