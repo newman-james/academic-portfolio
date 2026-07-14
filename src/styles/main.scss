@@ -36,6 +36,10 @@ body {
 .portfolio-theme {
   --portfolio-bg: var(--cds-background);
   --portfolio-surface: var(--cds-layer-01);
+  --portfolio-shell-surface: #ffffff;
+  --portfolio-shell-text: #000000;
+  --portfolio-shell-text-secondary: #000000;
+  --portfolio-shell-hover: rgba(0, 0, 0, 0.08);
   --portfolio-surface-elevated: color-mix(in srgb, var(--cds-layer-02) 82%, var(--cds-layer-01) 18%);
   --portfolio-panel: linear-gradient(180deg, color-mix(in srgb, var(--cds-layer-02) 78%, transparent 22%) 0%, color-mix(in srgb, var(--cds-layer-01) 96%, transparent 4%) 100%);
   --portfolio-panel-hero: radial-gradient(circle at top, color-mix(in srgb, var(--cds-layer-accent-01) 40%, transparent 60%) 0%, transparent 38%), linear-gradient(180deg, color-mix(in srgb, var(--cds-layer-02) 84%, transparent 16%) 0%, color-mix(in srgb, var(--cds-layer-01) 97%, transparent 3%) 100%);
@@ -46,6 +50,13 @@ body {
   --portfolio-max-width: 90rem;
   min-height: 100vh;
   background: var(--portfolio-bg);
+}
+
+html[data-carbon-theme='g100'] .portfolio-theme {
+  --portfolio-shell-surface: #000000;
+  --portfolio-shell-text: #ffffff;
+  --portfolio-shell-text-secondary: #ffffff;
+  --portfolio-shell-hover: rgba(255, 255, 255, 0.16);
 }
 
 *,
@@ -126,6 +137,10 @@ a {
   margin-inline: auto;
 }
 
+.page-shell {
+  display: block;
+}
+
 .app-shell {
   min-height: 100vh;
   display: grid;
@@ -136,30 +151,51 @@ a {
 
 .app-shell__header {
   border-bottom: 1px solid var(--portfolio-border);
-  background: var(--portfolio-surface);
+  background: var(--portfolio-shell-surface);
+  background-color: var(--portfolio-shell-surface) !important;
+  color: var(--portfolio-shell-text);
 
   .cds--header__name,
   .cds--header__menu-item,
   .cds--header__action {
-    color: var(--portfolio-text);
+    color: var(--portfolio-shell-text);
   }
 
   .cds--header__name:hover,
   .cds--header__menu-item:hover,
   .cds--header__action:hover {
-    background: var(--cds-layer-hover-01);
+    background: var(--portfolio-shell-hover);
   }
 
   .cds--header__name--prefix {
-    color: var(--portfolio-text-secondary);
+    color: var(--portfolio-shell-text-secondary);
     font-weight: 600;
   }
 
   .cds--header__menu-item[aria-current='page'],
   .cds--header__menu-item--current {
-    color: var(--portfolio-text);
+    color: var(--portfolio-shell-text);
     box-shadow: inset 0 -2px 0 0 var(--cds-border-interactive);
   }
+}
+
+.app-shell__header.cds--header {
+  background: var(--portfolio-shell-surface) !important;
+  background-color: var(--portfolio-shell-surface) !important;
+}
+
+html[data-carbon-theme='g10'] .app-shell__header.cds--header,
+html[data-carbon-theme='g10'] .app-shell__header {
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+  color: #000000 !important;
+}
+
+html[data-carbon-theme='g100'] .app-shell__header.cds--header,
+html[data-carbon-theme='g100'] .app-shell__header {
+  background: #000000 !important;
+  background-color: #000000 !important;
+  color: #ffffff !important;
 }
 
 .app-shell__menu-button {
@@ -181,7 +217,8 @@ a {
 
 .app-shell__mobile-nav {
   display: none !important;
-  background: var(--portfolio-surface);
+  background: var(--portfolio-shell-surface);
+  background-color: var(--portfolio-shell-surface) !important;
 
   @media (max-width: 1055px) {
     display: block !important;
@@ -190,9 +227,14 @@ a {
   .cds--side-nav__navigation,
   .cds--side-nav__items,
   .cds--side-nav__link {
-    background: var(--portfolio-surface);
-    color: var(--portfolio-text);
+    background: var(--portfolio-shell-surface);
+    color: var(--portfolio-shell-text);
   }
+}
+
+.app-shell__mobile-nav.cds--side-nav {
+  background: var(--portfolio-shell-surface) !important;
+  background-color: var(--portfolio-shell-surface) !important;
 }
 
 .app-shell__content {
@@ -211,6 +253,8 @@ a {
 }
 
 .page-header {
+  display: grid;
+  gap: $spacing-04;
   border-bottom: 1px solid color-mix(in srgb, var(--portfolio-border) 65%, transparent 35%);
 }
 
@@ -452,6 +496,37 @@ a {
   padding: $spacing-06;
 }
 
+.about-page__grid {
+  display: grid;
+  gap: $spacing-05;
+
+  @include breakpoint-up(md) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.about-tile__markdown {
+  display: grid;
+  gap: $spacing-04;
+}
+
+.about-tile__markdown h2,
+.about-tile__markdown h3,
+.about-tile__markdown h4,
+.about-tile__markdown p,
+.about-tile__markdown ul,
+.about-tile__markdown ol {
+  margin: 0;
+  max-width: none;
+}
+
+.about-tile__markdown p,
+.about-tile__markdown li {
+  @include type-style('body-01');
+  color: var(--portfolio-text-secondary);
+  line-height: 1.7;
+}
+
 .subject-teaser h3 {
   @include type-style('heading-03');
 }
@@ -461,6 +536,7 @@ a {
 }
 
 .filter-panel__grid {
+  margin: 0;
   padding-block: $spacing-06;
 }
 
@@ -689,16 +765,18 @@ pre {
 .site-footer {
   padding-block: $spacing-06 $spacing-07;
   border-top: 1px solid var(--portfolio-border);
-  background: var(--portfolio-surface);
+  background: var(--portfolio-shell-surface);
+  color: var(--portfolio-shell-text);
 }
 
 .site-footer__name {
-  color: var(--portfolio-text);
+  color: var(--portfolio-shell-text);
   font-weight: 600;
 }
 
 .site-footer p {
   margin: 0;
+  color: var(--portfolio-shell-text);
 }
 
 @media (max-width: 66rem) {

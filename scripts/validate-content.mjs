@@ -62,7 +62,15 @@ async function main() {
     const raw = await fs.readFile(filePath, 'utf8')
     const entry = parseMarkdownFile(raw)
     const relativePath = path.relative(projectRoot, filePath)
-    const collection = relativePath.includes('/reading/') ? 'reading' : 'writing'
+    const collection = relativePath.includes('/reading/')
+      ? 'reading'
+      : relativePath.includes('/writing/')
+        ? 'writing'
+        : null
+
+    if (!collection) {
+      continue
+    }
 
     if (!entry.data.id) {
       issues.push(`${relativePath}: missing id`)

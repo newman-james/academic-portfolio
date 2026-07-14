@@ -6,11 +6,16 @@ subtitle: 'A cautious position on stability, fairness and the economy they will 
 summary: 'TODO: add summary'
 subject: 'TODO: assign subject'
 type: 'TODO: assign writing type'
-date: ''
+date: '2026-07-14'
 readingTime: 2
 featured: false
 status: review
-tags: []
+tags:
+  - European Union
+  - macroeconomics
+  - Generation Alpha
+  - inflation
+  - public policy
 sourceDocument: writing/02_generation_alpha_eu_macroeconomics.docx
 relatedWriting: []
 context: ''

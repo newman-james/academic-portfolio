@@ -5,7 +5,7 @@ const STORAGE_KEY = 'academic-portfolio-theme'
 
 function getPreferredTheme() {
   if (typeof window === 'undefined') {
-    return 'g10'
+    return 'g100'
   }
 
   const storedTheme = window.localStorage.getItem(STORAGE_KEY)
@@ -14,7 +14,7 @@ function getPreferredTheme() {
     return storedTheme
   }
 
-  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'g100' : 'g10'
+  return 'g100'
 }
 
 function ThemeProvider({ children }) {

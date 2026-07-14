@@ -41,12 +41,6 @@
   color: var(--cds-text-secondary);
 }
 
-.documentation-page__header-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: $spacing-03;
-}
-
 .documentation-page__reader-layout {
   display: grid;
   grid-template-columns: var(--documentation-sidebar-width) minmax(0, 1fr);
@@ -80,16 +74,15 @@
     linear-gradient(180deg, color-mix(in srgb, var(--cds-layer-02) 72%, transparent 28%) 0%, color-mix(in srgb, var(--cds-layer-01) 92%, transparent 8%) 100%);
 }
 
-.documentation-page__panel--intro {
-  background:
-    linear-gradient(180deg, color-mix(in srgb, var(--cds-layer-accent-01) 76%, transparent 24%) 0%, color-mix(in srgb, var(--cds-layer-01) 94%, transparent 6%) 100%);
-}
-
 .documentation-page__panel-header {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   gap: $spacing-04;
+}
+
+.documentation-page__panel--documents .documentation-page__panel-header {
+  margin-bottom: 1rem;
 }
 
 .documentation-page__panel-eyebrow {
@@ -181,10 +174,14 @@
   }
 }
 
-.documentation-page__tag-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: $spacing-03;
+.documentation-page__metadata-value {
+  min-width: 0;
+
+  strong {
+    display: block;
+    line-height: 1.6;
+    text-wrap: pretty;
+  }
 }
 
 .documentation-page__toc-link {
@@ -227,6 +224,7 @@
 }
 
 .documentation-page__document {
+  position: relative;
   display: grid;
   gap: $spacing-06;
   padding: clamp(1.5rem, 2vw, 2.5rem);
@@ -234,6 +232,24 @@
   background:
     radial-gradient(circle at top, color-mix(in srgb, var(--cds-layer-accent-01) 36%, transparent 64%) 0%, transparent 32%),
     linear-gradient(180deg, color-mix(in srgb, var(--cds-layer-02) 82%, transparent 18%) 0%, color-mix(in srgb, var(--cds-layer-01) 96%, transparent 4%) 100%);
+}
+
+.documentation-page__document--fullscreen {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  overflow: auto;
+}
+
+.documentation-page__document-controls {
+  position: absolute;
+  top: $spacing-05;
+  right: $spacing-05;
+  z-index: 2;
+}
+
+.documentation-page__document-controls .cds--btn {
+  min-inline-size: auto;
 }
 
 .writing-page--print {

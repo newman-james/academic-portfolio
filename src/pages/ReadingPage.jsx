@@ -2,16 +2,16 @@ import { Download } from '@carbon/icons-react'
 import { useEffect, useMemo, useState } from 'react'
 import { Button, Column, Grid } from '@carbon/react'
 import { visibleWriting } from '../content/collections.js'
-import { fetchVisibleReadingLog, getVisibleReadingSourceTypes, getVisibleReadingStatuses, READING_LOG_DOWNLOAD_PATH } from '../content/readingLog.js'
+import { fetchVisibleReadingLog, getVisibleReadingSourceTypes, READING_LOG_DOWNLOAD_FILENAME, READING_LOG_DOWNLOAD_PATH } from '../content/readingLog.js'
 import EmptyState from '../components/EmptyState.jsx'
 import PageHeader from '../components/PageHeader.jsx'
+import PageShell from '../components/PageShell.jsx'
 import ReadingEntry from '../components/ReadingEntry.jsx'
 import ReadingFilters from '../components/ReadingFilters.jsx'
 import { siteDescription } from '../data/site.js'
 import useDocumentMeta from '../hooks/useDocumentMeta.js'
 import { getFilterOptions, matchesFilter, sortByCompletionDateDescending } from '../utils/content.js'
 
-const ALL_STATUSES_LABEL = 'All statuses'
 const ALL_SOURCE_TYPES_LABEL = 'All source types'
 
 function ReadingPage() {
@@ -21,15 +21,10 @@ function ReadingPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [loadError, setLoadError] = useState('')
 
-  const readingStatusOptions = useMemo(
-    () => getFilterOptions(getVisibleReadingStatuses(readingEntries), ALL_STATUSES_LABEL).map((item) => item.label),
-    [readingEntries],
-  )
   const sourceTypeOptions = useMemo(
     () => getFilterOptions(getVisibleReadingSourceTypes(readingEntries), ALL_SOURCE_TYPES_LABEL).map((item) => item.label),
     [readingEntries],
   )
-  const [selectedStatus, setSelectedStatus] = useState(ALL_STATUSES_LABEL)
   const [selectedSourceType, setSelectedSourceType] = useState(ALL_SOURCE_TYPES_LABEL)
 
   useEffect(() => {
@@ -62,37 +57,33 @@ function ReadingPage() {
 
   const filteredReading = useMemo(() => {
     return sortByCompletionDateDescending(readingEntries).filter((entry) => {
-      const matchesStatus = matchesFilter(entry.readingStatus, selectedStatus, ALL_STATUSES_LABEL)
       const matchesSourceType = matchesFilter(entry.sourceType, selectedSourceType, ALL_SOURCE_TYPES_LABEL)
 
-      return matchesStatus && matchesSourceType
+      return matchesSourceType
     })
-  }, [readingEntries, selectedSourceType, selectedStatus])
+  }, [readingEntries, selectedSourceType])
 
   return (
-    <>
+    <PageShell>
       <PageHeader
         eyebrow="Reading"
         title="Reading log and source notes"
         intro="A structured record of books, essays, articles and reports that inform the writing collected elsewhere in the portfolio."
         actions={(
-          <Button as="a" href={READING_LOG_DOWNLOAD_PATH} download="reading-log.csv" kind="tertiary" renderIcon={Download}>
+          <Button as="a" href={READING_LOG_DOWNLOAD_PATH} download={READING_LOG_DOWNLOAD_FILENAME} kind="tertiary" renderIcon={Download}>
             Download CSV
           </Button>
         )}
       />
       <ReadingFilters
         onSourceTypeChange={setSelectedSourceType}
-        onStatusChange={setSelectedStatus}
         resultCount={filteredReading.length}
         selectedSourceType={selectedSourceType}
-        selectedStatus={selectedStatus}
         sourceTypes={sourceTypeOptions}
-        statuses={readingStatusOptions}
       />
 
       <section className="page-section">
-        <Grid className="page-grid">
+        <Grid className="reading-page__results-grid">
           <Column sm={4} md={8} lg={12}>
             {isLoading ? (
               <EmptyState
@@ -112,13 +103,13 @@ function ReadingPage() {
             ) : (
               <EmptyState
                 title="No reading entries match the current filters"
-                copy="Try widening the status or source type filter to see more reading notes."
+                copy="Try widening the source type filter to see more reading notes."
               />
             )}
           </Column>
         </Grid>
       </section>
-    </>
+    </PageShell>
   )
 }
 

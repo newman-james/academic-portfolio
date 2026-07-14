@@ -1,13 +1,14 @@
 import { Button, Column, Grid, InlineNotification, Tag, Tile } from '@carbon/react'
-import { ArrowRight, Download } from '@carbon/icons-react'
-import { useEffect, useMemo, useState } from 'react'
+import { ArrowRight, Download, Maximize, Minimize } from '@carbon/icons-react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { allWriting, visibleWriting } from '../content/collections.js'
 import MarkdownArticle from '../components/MarkdownArticle.jsx'
+import PageShell from '../components/PageShell.jsx'
 import { siteDescription } from '../data/site.js'
 import useDocumentMeta from '../hooks/useDocumentMeta.js'
 import { formatDate, formatReadingTime, formatStatusLabel, getDisplaySummary, sortByDateDescending, truncateToWordCount } from '../utils/content.js'
-import { exportWritingToPdf, openWritingPrintPreview } from '../utils/writingPdf.js'
+import { exportWritingToPdf } from '../utils/writingPdf.js'
 import './WritingPage.scss'
 
 const CATALOGUE_EXCERPT_WORD_LIMIT = 19
@@ -38,12 +39,22 @@ function estimateWordCount(body) {
     .filter(Boolean).length
 }
 
+function getSourceDocumentUrl(sourceDocument) {
+  if (!sourceDocument) {
+    return ''
+  }
+
+  return new URL(`documents/${sourceDocument}`, new URL(import.meta.env.BASE_URL, window.location.origin)).toString()
+}
+
 function WritingPage({ printMode = false }) {
+  const documentArticleRef = useRef(null)
   const navigate = useNavigate()
   const { slug } = useParams()
   const [searchParams] = useSearchParams()
   const [exportState, setExportState] = useState('idle')
   const [exportError, setExportError] = useState('')
+  const [isArticleFullscreen, setIsArticleFullscreen] = useState(false)
   const availableWriting = visibleWriting.length ? visibleWriting : allWriting
   const orderedWriting = useMemo(() => sortByDateDescending(availableWriting), [availableWriting])
   const selectedEntry = useMemo(
@@ -55,6 +66,7 @@ function WritingPage({ printMode = false }) {
   const relatedPieces = selectedEntry
     ? orderedWriting.filter((entry) => selectedEntry.relatedWriting?.includes(entry.id))
     : []
+  const sourceDocumentUrl = selectedEntry ? getSourceDocumentUrl(selectedEntry.sourceDocument) : ''
   const openEntry = (entry) => {
     navigate(`/writing/${entry.slug}`)
   }
@@ -65,9 +77,40 @@ function WritingPage({ printMode = false }) {
     : ''
 
   useDocumentMeta(
-    selectedEntry ? `${selectedEntry.title}` : 'Writing',
+    'Academic writing portfolio',
     selectedEntry ? getDisplaySummary(selectedEntry) : `Browse essays, research notes and reflections. ${siteDescription}`,
   )
+
+  useEffect(() => {
+    if (printMode || typeof document === 'undefined') {
+      return undefined
+    }
+
+    document.title = 'James Newman academic writing portfolio'
+
+    const ogTitle = document.querySelector('meta[property="og:title"]')
+    if (ogTitle) {
+      ogTitle.setAttribute('content', 'James Newman academic writing portfolio')
+    }
+
+    return undefined
+  }, [printMode, selectedEntry])
+
+  useEffect(() => {
+    if (printMode || typeof document === 'undefined') {
+      return undefined
+    }
+
+    const handleFullscreenChange = () => {
+      setIsArticleFullscreen(document.fullscreenElement === documentArticleRef.current)
+    }
+
+    document.addEventListener('fullscreenchange', handleFullscreenChange)
+
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFullscreenChange)
+    }
+  }, [printMode])
 
   useEffect(() => {
     if (!printMode || !selectedEntry) {
@@ -121,15 +164,20 @@ function WritingPage({ printMode = false }) {
     }
   }, [autoPrint, printMode])
 
-  const handlePrint = () => {
-    if (!selectedEntry) {
+  const handleToggleFullscreen = async () => {
+    if (printMode || !documentArticleRef.current || typeof document === 'undefined') {
       return
     }
 
     try {
-      openWritingPrintPreview({ entry: selectedEntry })
+      if (document.fullscreenElement === documentArticleRef.current) {
+        await document.exitFullscreen()
+        return
+      }
+
+      await documentArticleRef.current.requestFullscreen()
     } catch (error) {
-      setExportError(error instanceof Error ? error.message : 'Print preview failed.')
+      setExportError(error instanceof Error ? error.message : 'Fullscreen mode failed to initialise.')
     }
   }
 
@@ -146,12 +194,25 @@ function WritingPage({ printMode = false }) {
       setExportState('idle')
     } catch (error) {
       setExportState('idle')
-      setExportError(error instanceof Error ? error.message : 'PDF export failed.')
+      setExportError(error instanceof Error ? error.message : 'PDF export failed to initialise.')
     }
   }
 
   const documentArticle = selectedEntry ? (
-    <article className="documentation-page__document">
+    <article ref={documentArticleRef} className={`documentation-page__document${isArticleFullscreen ? ' documentation-page__document--fullscreen' : ''}`}>
+      <div className="documentation-page__document-controls no-print">
+        <Button
+          aria-label={isArticleFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
+          kind="ghost"
+          hasIconOnly
+          iconDescription={isArticleFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
+          renderIcon={isArticleFullscreen ? Minimize : Maximize}
+          size="sm"
+          tooltipAlignment="end"
+          tooltipPosition="left"
+          onClick={handleToggleFullscreen}
+        />
+      </div>
       <header className="documentation-page__document-header">
         <p className="documentation-page__document-kicker">{selectedEntry.id}</p>
         <h2 className="documentation-page__document-title">{selectedEntry.title}</h2>
@@ -163,7 +224,16 @@ function WritingPage({ printMode = false }) {
 
       <div className="writing-page__article-actions no-print">
         <div className="writing-page__toolbar">
-          <Button kind="ghost" size="sm" onClick={handlePrint}>Print</Button>
+          <Button
+            as="a"
+            href={sourceDocumentUrl}
+            kind="tertiary"
+            rel="noreferrer"
+            renderIcon={Download}
+            target="_blank"
+          >
+            Open source document
+          </Button>
           <Button
             kind="primary"
             size="sm"
@@ -171,7 +241,7 @@ function WritingPage({ printMode = false }) {
             disabled={exportState === 'exporting'}
             onClick={handleExportPdf}
           >
-            {exportState === 'exporting' ? 'Opening PDF export...' : 'Export PDF'}
+            {exportState === 'exporting' ? 'Preparing PDF export...' : 'Export PDF'}
           </Button>
         </div>
         {exportError ? (
@@ -179,7 +249,7 @@ function WritingPage({ printMode = false }) {
             kind="error"
             lowContrast
             hideCloseButton
-            title="PDF export failed"
+            title="Reader control failed"
             subtitle={exportError}
           />
         ) : null}
@@ -216,143 +286,100 @@ function WritingPage({ printMode = false }) {
   }
 
   return (
-    <div className="documentation-page writing-page">
-      <Grid className="page-grid">
-        <Column sm={4} md={8} lg={16}>
-          <header className="documentation-page__page-header">
-            <div>
-              <p className="documentation-page__page-eyebrow">Writing</p>
-              <h1 className="documentation-page__page-title">Writing</h1>
-              <p className="documentation-page__page-copy">
-                A report-style writing reader for essays, position papers and durable academic work sourced from the local Word-backed archive.
-              </p>
-            </div>
-            <div className="documentation-page__header-actions">
-              <Tag size="md" type="blue">Word-backed</Tag>
-              <Tag size="md" type="cool-gray">Read only</Tag>
-            </div>
-          </header>
-        </Column>
+    <PageShell className="documentation-page writing-page">
+      <header className="documentation-page__page-header">
+        <div>
+          <p className="documentation-page__page-eyebrow">Writing</p>
+          <h1 className="documentation-page__page-title">James Newman academic writing portfolio</h1>
+          <p className="documentation-page__page-copy">
+            A curated portfolio of essays and position papers demonstrating independent research, critical analysis and the development of evidence-led arguments across economics, business and contemporary affairs.
+          </p>
+        </div>
+      </header>
 
-        <Column sm={4} md={8} lg={16}>
-          <div className="documentation-page__reader-layout">
-            <aside className="documentation-page__sidebar" aria-label="Writing navigation">
-              <Tile className="documentation-page__panel documentation-page__panel--intro">
-                <p className="documentation-page__panel-eyebrow">Library</p>
-                <h2 className="documentation-page__panel-title">Writing catalogue</h2>
-                <p className="documentation-page__panel-copy">
-                  Word-backed writing pieces discovered from the local portfolio workspace.
-                </p>
+      <div className="documentation-page__reader-layout">
+        <aside className="documentation-page__sidebar" aria-label="Writing navigation">
+          {selectedEntry ? (
+            <>
+              <Tile className="documentation-page__panel">
+                <div className="documentation-page__panel-header">
+                  <div>
+                    <h2 className="documentation-page__panel-title">Metadata</h2>
+                    <p className="documentation-page__panel-copy">Current document context</p>
+                  </div>
+                </div>
+
+                <div className="documentation-page__metadata-grid">
+                  <span>Keywords</span>
+                  <div className="documentation-page__metadata-value">
+                    <strong>{selectedEntry.tags.join(', ')}</strong>
+                  </div>
+                  <span>Words</span><strong>{estimateWordCount(selectedEntry.body)}</strong>
+                  <span>Reading time</span><strong>{formatReadingTime(selectedEntry.readingTime)}</strong>
+                  <span>Date published</span><strong>{formatDate(selectedEntry.date)}</strong>
+                </div>
               </Tile>
 
-              {selectedEntry ? (
-                <>
-                  <Tile className="documentation-page__panel">
-                    <div className="documentation-page__panel-header">
-                      <div>
-                        <h2 className="documentation-page__panel-title">Contents</h2>
-                        <p className="documentation-page__panel-copy">Auto-seeded reader outline</p>
-                      </div>
-                    </div>
-
-                    <nav className="documentation-page__toc" aria-label="Document contents">
-                      {tableOfContents.map((section) => (
-                        <a key={section.id} href={`#${section.id}`} className="documentation-page__toc-link">
-                          {section.heading}
-                        </a>
-                      ))}
-                    </nav>
-                  </Tile>
-
-                  <Tile className="documentation-page__panel">
-                    <div className="documentation-page__panel-header">
-                      <div>
-                        <h2 className="documentation-page__panel-title">Documents</h2>
-                        <p className="documentation-page__panel-copy">{orderedWriting.length} seeded item{orderedWriting.length === 1 ? '' : 's'}</p>
-                      </div>
-                    </div>
-
-                    <div className="documentation-page__catalogue-list">
-                      {orderedWriting.map((entry) => (
-                        <button
-                          key={entry.slug}
-                          type="button"
-                          className={`documentation-page__catalogue-item${selectedEntry?.slug === entry.slug ? ' documentation-page__catalogue-item--active' : ''}`}
-                          onClick={() => openEntry(entry)}
-                        >
-                          <div className="documentation-page__catalogue-meta">
-                            <span>{entry.id}</span>
-                            <Tag size="sm" type={entry.status === 'review' ? 'purple' : 'green'}>
-                              {formatStatusLabel(entry.status)}
-                            </Tag>
-                          </div>
-                          <strong>{entry.title}</strong>
-                          <p>{truncateToWordCount(getDisplaySummary(entry), CATALOGUE_EXCERPT_WORD_LIMIT)}</p>
-                          <div className="documentation-page__catalogue-footer">
-                            <span>Word (.docx)</span>
-                            <span>{estimateWordCount(entry.body)} words</span>
-                          </div>
-                        </button>
-                      ))}
-                    </div>
-                  </Tile>
-
-                  <Tile className="documentation-page__panel">
-                    <div className="documentation-page__panel-header">
-                      <div>
-                        <h2 className="documentation-page__panel-title">Metadata</h2>
-                        <p className="documentation-page__panel-copy">Current document context</p>
-                      </div>
-                    </div>
-
-                    <div className="documentation-page__metadata-grid">
-                      <span>ID</span><strong>{selectedEntry.id}</strong>
-                      <span>Status</span><strong>{formatStatusLabel(selectedEntry.status)}</strong>
-                      <span>Source</span><strong>Word (.docx)</strong>
-                      <span>Words</span><strong>{estimateWordCount(selectedEntry.body)}</strong>
-                      <span>Reading time</span><strong>{formatReadingTime(selectedEntry.readingTime)}</strong>
-                      <span>Date</span><strong>{formatDate(selectedEntry.date)}</strong>
-                    </div>
-
-                    {selectedEntry.tags.length ? (
-                      <div className="documentation-page__tag-row">
-                        {selectedEntry.tags.map((tag) => (
-                          <Tag key={tag} size="sm" type="cool-gray">{tag}</Tag>
-                        ))}
-                        {selectedEntry.featured ? <Tag size="sm" type="warm-red">Featured</Tag> : null}
-                      </div>
-                    ) : null}
-
-                    <Button
-                      as="a"
-                      href={`/documents/${selectedEntry.sourceDocument}`}
-                      kind="tertiary"
-                      renderIcon={Download}
-                    >
-                      Open source document
-                    </Button>
-                  </Tile>
-                </>
-              ) : null}
-            </aside>
-
-            <div className="documentation-page__reader-stage">
-              {documentArticle}
-
-              {relatedPieces.length ? (
-                <div className="documentation-page__related-note">
-                  <span>Related writing</span>
-                  <button type="button" className="documentation-page__related-link" onClick={() => openEntry(relatedPieces[0])}>
-                    Continue with {relatedPieces[0].title}
-                    <ArrowRight size={16} />
-                  </button>
+              <Tile className="documentation-page__panel">
+                <div className="documentation-page__panel-header">
+                  <div>
+                    <h2 className="documentation-page__panel-title">Contents</h2>
+                    <p className="documentation-page__panel-copy">Auto-seeded reader outline</p>
+                  </div>
                 </div>
-              ) : null}
+
+                <nav className="documentation-page__toc" aria-label="Document contents">
+                  {tableOfContents.map((section) => (
+                    <a key={section.id} href={`#${section.id}`} className="documentation-page__toc-link">
+                      {section.heading}
+                    </a>
+                  ))}
+                </nav>
+              </Tile>
+
+              <Tile className="documentation-page__panel documentation-page__panel--documents">
+                <div className="documentation-page__panel-header">
+                  <div>
+                    <h2 className="documentation-page__panel-title">Documents</h2>
+                  </div>
+                </div>
+
+                <div className="documentation-page__catalogue-list">
+                  {orderedWriting.map((entry) => (
+                    <button
+                      key={entry.slug}
+                      type="button"
+                      className={`documentation-page__catalogue-item${selectedEntry?.slug === entry.slug ? ' documentation-page__catalogue-item--active' : ''}`}
+                      onClick={() => openEntry(entry)}
+                    >
+                      <strong>{entry.title}</strong>
+                      <p>{truncateToWordCount(getDisplaySummary(entry), CATALOGUE_EXCERPT_WORD_LIMIT)}</p>
+                      <div className="documentation-page__catalogue-footer">
+                        <span>{estimateWordCount(entry.body)} words</span>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </Tile>
+            </>
+          ) : null}
+        </aside>
+
+        <div className="documentation-page__reader-stage">
+          {documentArticle}
+
+          {relatedPieces.length ? (
+            <div className="documentation-page__related-note">
+              <span>Related writing</span>
+              <button type="button" className="documentation-page__related-link" onClick={() => openEntry(relatedPieces[0])}>
+                Continue with {relatedPieces[0].title}
+                <ArrowRight size={16} />
+              </button>
             </div>
-          </div>
-        </Column>
-      </Grid>
-    </div>
+          ) : null}
+        </div>
+      </div>
+    </PageShell>
   )
 }
 

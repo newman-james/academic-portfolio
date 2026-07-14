@@ -1,6 +1,9 @@
 import { sortByCompletionDateDescending } from '../utils/content.js'
 
-export const READING_LOG_DOWNLOAD_PATH = '/reading-log.csv'
+const APP_BASE_PATH = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : `${import.meta.env.BASE_URL}/`
+
+export const READING_LOG_DOWNLOAD_PATH = `${APP_BASE_PATH}reading-logs/reading-log-aug26.csv`
+export const READING_LOG_DOWNLOAD_FILENAME = 'reading-log-aug26.csv'
 
 const isDevelopmentPreview = import.meta.env.DEV
 
@@ -91,22 +94,24 @@ function isPreviewVisibleEntry(entry) {
 
 function normalizeReadingCsvEntry(row) {
   const title = String(row.title || '').trim() || 'Untitled reading entry'
-  const summary = String(row.summary || '').trim()
+  const summary = String(row.summary || row.note || '').trim()
   const slug = String(row.slug || '').trim() || slugify(title)
+  const relatedWriting = parseList(row.relatedWriting)
+  const status = String(row.status || '').trim() || 'published'
 
   return {
-    author: isPlaceholderText(row.author) ? 'Unknown author' : String(row.author).trim(),
+    author: isPlaceholderText(row.author || row.creator) ? 'Unknown author' : String(row.author || row.creator).trim(),
     dateCompleted: String(row.dateCompleted || '').trim(),
     id: String(row.id || '').trim() || `reading-${slug}`,
     keyIdea: isPlaceholderText(row.keyIdea) ? summary : String(row.keyIdea).trim(),
-    publicationYear: String(row.publicationYear || '').trim(),
-    readingStatus: String(row.readingStatus || '').trim() || 'To read',
-    relatedWriting: parseList(row.relatedWriting),
+    publicationYear: String(row.publicationYear || row.year || '').trim(),
+    readingStatus: String(row.readingStatus || '').trim() || 'Logged',
+    relatedWriting,
     slug,
-    sourceDocument: String(row.sourceDocument || '').trim(),
-    sourceType: isPlaceholderText(row.sourceType) ? 'Unassigned' : String(row.sourceType).trim(),
-    status: String(row.status || '').trim() || 'review',
-    subject: isPlaceholderText(row.subject) ? 'Unassigned' : String(row.subject).trim(),
+    sourceDocument: String(row.sourceDocument || row.url || '').trim(),
+    sourceType: isPlaceholderText(row.sourceType || row.category) ? 'Unassigned' : String(row.sourceType || row.category).trim(),
+    status,
+    subject: isPlaceholderText(row.subject || row.topic) ? 'Unassigned' : String(row.subject || row.topic).trim(),
     summary,
     tags: parseList(row.tags),
     title,

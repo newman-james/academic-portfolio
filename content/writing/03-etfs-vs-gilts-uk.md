@@ -6,11 +6,16 @@ subtitle: 'A comparison of investment wrappers, government bonds and economic pu
 summary: 'TODO: add summary'
 subject: 'TODO: assign subject'
 type: 'TODO: assign writing type'
-date: ''
+date: '2026-07-14'
 readingTime: 5
 featured: false
 status: review
-tags: []
+tags:
+  - UK gilts
+  - ETFs
+  - fixed income
+  - duration risk
+  - portfolio construction
 sourceDocument: writing/03_etfs_vs_gilts_uk.docx
 relatedWriting: []
 context: ''

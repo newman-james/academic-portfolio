@@ -6,11 +6,16 @@ subtitle: How the historic Hongs have become adaptive Asian portfolio groups
 summary: 'TODO: add summary'
 subject: 'TODO: assign subject'
 type: 'TODO: assign writing type'
-date: ''
+date: '2026-07-14'
 readingTime: 3
 featured: false
 status: review
-tags: []
+tags:
+  - Hong Kong
+  - conglomerates
+  - corporate strategy
+  - capital allocation
+  - governance
 sourceDocument: writing/01_taipan_company_performance_hong_kong.docx
 relatedWriting: []
 context: ''

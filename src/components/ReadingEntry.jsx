@@ -1,6 +1,5 @@
 import { Link, Tag, Tile } from '@carbon/react'
 import { Link as RouterLink } from 'react-router-dom'
-import { formatDate } from '../utils/content.js'
 
 function ReadingEntry({ entry, relatedPieces }) {
   return (
@@ -14,7 +13,6 @@ function ReadingEntry({ entry, relatedPieces }) {
         </div>
         <div className="tag-row">
           <Tag type="cool-gray">{entry.sourceType}</Tag>
-          <Tag type={entry.readingStatus === 'Completed' ? 'green' : 'purple'}>{entry.readingStatus}</Tag>
         </div>
       </header>
 
@@ -22,17 +20,6 @@ function ReadingEntry({ entry, relatedPieces }) {
       <blockquote>
         <p>{entry.keyIdea}</p>
       </blockquote>
-
-      <dl className="reading-entry__metadata">
-        <div>
-          <dt>Completed</dt>
-          <dd>{formatDate(entry.dateCompleted)}</dd>
-        </div>
-        <div>
-          <dt>Document status</dt>
-          <dd>{entry.status}</dd>
-        </div>
-      </dl>
 
       {relatedPieces.length ? (
         <section>
