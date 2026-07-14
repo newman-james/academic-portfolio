@@ -71,7 +71,7 @@ function WritingPage({ printMode = false }) {
     navigate(`/writing/${entry.slug}`)
   }
   const documentMeta = selectedEntry
-    ? [selectedEntry.status === 'review' ? 'Review' : null, formatDate(selectedEntry.date), formatReadingTime(selectedEntry.readingTime)]
+    ? [formatDate(selectedEntry.date), formatReadingTime(selectedEntry.readingTime)]
         .filter(Boolean)
         .join(' · ')
     : ''
@@ -214,7 +214,6 @@ function WritingPage({ printMode = false }) {
         />
       </div>
       <header className="documentation-page__document-header">
-        <p className="documentation-page__document-kicker">{selectedEntry.id}</p>
         <h2 className="documentation-page__document-title">{selectedEntry.title}</h2>
         <p className="documentation-page__document-meta">{documentMeta}</p>
         <p className="documentation-page__document-summary">{selectedEntry.subtitle || getDisplaySummary(selectedEntry)}</p>
@@ -305,7 +304,6 @@ function WritingPage({ printMode = false }) {
                 <div className="documentation-page__panel-header">
                   <div>
                     <h2 className="documentation-page__panel-title">Metadata</h2>
-                    <p className="documentation-page__panel-copy">Current document context</p>
                   </div>
                 </div>
 
@@ -324,7 +322,6 @@ function WritingPage({ printMode = false }) {
                 <div className="documentation-page__panel-header">
                   <div>
                     <h2 className="documentation-page__panel-title">Contents</h2>
-                    <p className="documentation-page__panel-copy">Auto-seeded reader outline</p>
                   </div>
                 </div>
 
