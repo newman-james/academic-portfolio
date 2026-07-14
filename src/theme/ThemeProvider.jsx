@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import ThemeContext from './ThemeContext.js'
 
-const STORAGE_KEY = 'academic-portfolio-theme'
+const STORAGE_KEY = 'academic-portfolio-theme-v2'
 
 function getPreferredTheme() {
   if (typeof window === 'undefined') {

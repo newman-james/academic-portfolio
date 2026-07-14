@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-carbon-theme="g100">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="%BASE_URL%favicon.svg" />
@@ -37,10 +37,9 @@
     </script>
     <script>
       (function () {
-        const storageKey = 'academic-portfolio-theme'
+        const storageKey = 'academic-portfolio-theme-v2'
         const storedTheme = window.localStorage.getItem(storageKey)
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-        const theme = storedTheme || (prefersDark ? 'g100' : 'g10')
+        const theme = storedTheme || 'g100'
 
         document.documentElement.setAttribute('data-carbon-theme', theme)
       })()
