@@ -1,5 +1,5 @@
-import { Button, Column, Grid, InlineNotification, Tag, Tile } from '@carbon/react'
-import { ArrowRight, Download, Maximize, Minimize } from '@carbon/icons-react'
+import { Button, Column, Grid, InlineNotification, Tile } from '@carbon/react'
+import { ArrowRight, Document, Download, Maximize, Minimize } from '@carbon/icons-react'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { allWriting, visibleWriting } from '../content/collections.js'
@@ -7,7 +7,7 @@ import MarkdownArticle from '../components/MarkdownArticle.jsx'
 import PageShell from '../components/PageShell.jsx'
 import { siteDescription } from '../data/site.js'
 import useDocumentMeta from '../hooks/useDocumentMeta.js'
-import { formatDate, formatReadingTime, formatStatusLabel, getDisplaySummary, sortByDateDescending, truncateToWordCount } from '../utils/content.js'
+import { formatDate, formatReadingTime, getDisplaySummary, sortByDateDescending, truncateToWordCount } from '../utils/content.js'
 import { exportWritingToPdf } from '../utils/writingPdf.js'
 import './WritingPage.scss'
 
@@ -224,23 +224,23 @@ function WritingPage({ printMode = false }) {
       <div className="writing-page__article-actions no-print">
         <div className="writing-page__toolbar">
           <Button
-            as="a"
-            href={sourceDocumentUrl}
-            kind="tertiary"
-            rel="noreferrer"
-            renderIcon={Download}
-            target="_blank"
-          >
-            Open source document
-          </Button>
-          <Button
             kind="primary"
             size="sm"
             renderIcon={Download}
             disabled={exportState === 'exporting'}
             onClick={handleExportPdf}
           >
-            {exportState === 'exporting' ? 'Preparing PDF export...' : 'Export PDF'}
+            {exportState === 'exporting' ? 'Preparing PDF...' : 'Download PDF'}
+          </Button>
+          <Button
+            as="a"
+            href={sourceDocumentUrl}
+            download
+            disabled={!sourceDocumentUrl}
+            kind="tertiary"
+            renderIcon={Document}
+          >
+            Download DOCX
           </Button>
         </div>
         {exportError ? (
