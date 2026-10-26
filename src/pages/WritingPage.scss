@@ -224,6 +224,7 @@
 .documentation-page__document {
   position: relative;
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: $spacing-06;
   padding: clamp(1.5rem, 2vw, 2.5rem);
   border: 1px solid var(--cds-border-subtle);
