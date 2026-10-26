@@ -264,6 +264,11 @@ Run `npm run docs:convert -- "singapore"` after editing the Word source. The gen
 
 ### Downloadable Word and PDF documents
 
+Article charts fit the article width, including on mobile. On smaller screens,
+the "View chart fullscreen" button opens a viewport-sized dialog with a close
+button and Escape-key support; closing it returns focus to the original control.
+The chart caption and surrounding text remain in the normal article flow.
+
 Download DOCX serves the unchanged canonical Word document copied by `docs:convert`.
 Download PDF serves a static PDF exported directly from that Word document, not
 from Markdown or the browser's print view.

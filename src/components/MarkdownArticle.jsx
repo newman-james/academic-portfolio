@@ -1,3 +1,6 @@
+import { Button } from '@carbon/react'
+import { Maximize, Minimize } from '@carbon/icons-react'
+import { useId, useRef } from 'react'
 import ReactMarkdown from 'react-markdown'
 import rehypeRaw from 'rehype-raw'
 import remarkGfm from 'remark-gfm'
@@ -21,6 +24,40 @@ function assetUrl(src) {
   return src?.startsWith('/document-assets/') || src?.startsWith('/datasets/')
     ? `${import.meta.env.BASE_URL}${src.slice(1)}`
     : src
+}
+
+function ArticleImage({ alt, src, title }) {
+  const dialogRef = useRef(null)
+  const expandRef = useRef(null)
+  const dialogId = useId()
+
+  return (
+    <div className="article-image-viewer">
+      <img alt={alt || ''} src={assetUrl(src)} title={title} />
+      <Button
+        ref={expandRef}
+        className="article-image-expand no-print"
+        kind="ghost"
+        size="sm"
+        renderIcon={Maximize}
+        aria-haspopup="dialog"
+        aria-controls={dialogId}
+        onClick={() => dialogRef.current.showModal()}
+      >
+        View chart fullscreen
+      </Button>
+      <dialog ref={dialogRef} id={dialogId} className="article-image-dialog no-print" aria-label="Fullscreen chart" onClose={() => expandRef.current?.focus()}>
+        <form method="dialog">
+          <Button type="submit" kind="tertiary" size="sm" renderIcon={Minimize} autoFocus>
+            Close fullscreen chart
+          </Button>
+        </form>
+        <div className="article-image-dialog-content">
+          <img alt={alt || ''} src={assetUrl(src)} title={title} />
+        </div>
+      </dialog>
+    </div>
+  )
 }
 
 function rehypeArticleFigures() {
@@ -83,11 +120,7 @@ function MarkdownArticle({ content, className = 'article-body' }) {
               {children}
             </figure>
           ),
-          img: ({ alt, src, title }) => (
-            <div className="article-image-scroll" tabIndex={0} role="region" aria-label="Article illustration; scroll horizontally if needed">
-              <img alt={alt || ''} src={assetUrl(src)} title={title} />
-            </div>
-          ),
+          img: ({ alt, src, title }) => <ArticleImage alt={alt} src={src} title={title} />,
           table: ({ children }) => (
             <div className="article-table-scroll" tabIndex={0} role="region" aria-label="Article data table; scroll horizontally if needed">
               <table>{children}</table>
