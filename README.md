@@ -55,6 +55,7 @@ Other useful commands:
 npm run docs:convert
 npm run docs:convert -- "Essay Draft.docx"
 npm run docs:validate
+npm run docs:pdf
 npm run build
 npm run lint
 ```
@@ -256,6 +257,24 @@ Supported rendering features:
 Arbitrary executable HTML is not enabled in the renderer.
 
 ## Images and extracted assets
+
+The Singapore essay is an unpublished review draft pending primary-source verification of the supplied inflation figures and citations. Its canonical Word document includes the supplied chart, caption, explanatory paragraph and source hyperlinks. The chart originates in `docs/data/singapore_sras.svg`; the underlying dataset is retained in `docs/data/singapore-sras.csv`. The data appendix has been removed. The compact explanatory paragraph includes the visualisation credit, RAWGraphs link and dataset download.
+
+Run `npm run docs:convert -- "singapore"` after editing the Word source. The generated article, extracted chart and public Word download must come from that conversion, not from a separate website-only component. Visible verification notices were removed at the author's request; review status remains unchanged. Review entries are visible only in local development, not production; do not deploy the Singapore draft until the official MAS/MTI data, publication details and policy chronology have been verified.
+
+### Downloadable Word and PDF documents
+
+Download DOCX serves the unchanged canonical Word document copied by `docs:convert`.
+Download PDF serves a static PDF exported directly from that Word document, not
+from Markdown or the browser's print view.
+
+After changing a writing document, run `npm run docs:convert`, then
+`npm run docs:pdf` on macOS with Microsoft Word installed. Word exports temporary
+copies without saving changes to the canonical documents. Office lock files are
+ignored. Commit the generated PDFs and `public/documents/pdf-manifest.json` along
+with the updated documents. `npm run docs:validate` checks source and PDF checksums
+to reject missing or stale exports; Linux CI uses these committed exports and does
+not require Word. Existing print routes remain available as browser print views.
 
 Embedded Word document images are extracted during conversion and written to:
 

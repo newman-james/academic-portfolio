@@ -29,6 +29,19 @@ const turndownService = new TurndownService({
 
 turndownService.use(gfm)
 
+turndownService.addRule('articleNote', {
+  filter: (node) => node.nodeName === 'P' && node.getAttribute('class') === 'article-note',
+  replacement: (_content, node) => `\n\n${node.outerHTML.replace(/href="file:\/+datasets\//g, 'href="/datasets/')}\n\n`,
+})
+
+turndownService.addRule('wordTableCell', {
+  filter: ['th', 'td'],
+  replacement: (content, node) => {
+    const firstCell = node === node.parentNode.firstChild
+    return `${firstCell ? '| ' : ' '}${content.trim().replace(/\s*\n\s*/g, ' ').replace(/\|/g, '\\|')} |`
+  },
+})
+
 turndownService.addRule('footnoteReference', {
   filter: (node) => node.nodeName === 'SUP' && /^#footnote-\d+$/.test(node.firstChild?.getAttribute?.('href') || ''),
   replacement: (_content, node) => `[^${node.firstChild.getAttribute('href').slice('#footnote-'.length)}]`,
@@ -58,6 +71,8 @@ const mammothStyleMap = [
   "p[style-name='Title'] => h1:fresh",
   "p[style-name='Subtitle'] => p:fresh",
   "p[style-name='Bibliography'] => p:fresh",
+  "p[style-name='Caption'] => p:fresh",
+  "p[style-name='Article Note'] => p.article-note:fresh",
 ]
 
 function extractFirstHeading(markdown) {
@@ -156,6 +171,15 @@ async function convertDocxToMarkdown(sourcePath, collection, slug) {
   }
 }
 
+async function copyLinkedDatasets(markdown) {
+  const filenames = new Set(Array.from(markdown.matchAll(/href="\/datasets\/([a-zA-Z0-9_-]+\.csv)"/g), (match) => match[1]))
+  for (const filename of filenames) {
+    const destination = path.join(projectRoot, 'public', 'datasets', filename)
+    await ensureDirectory(path.dirname(destination))
+    await fs.copyFile(path.join(docsRoot, 'data', filename), destination)
+  }
+}
+
 async function convertOneFile(sourcePath) {
   const { collection, defaultStatus, relativePath } = getCollectionFromSourcePath(sourcePath)
   const basename = path.basename(sourcePath, path.extname(sourcePath))
@@ -172,12 +196,14 @@ async function convertOneFile(sourcePath) {
     const existingFile = parseMarkdownFile(existingRaw)
 
     if (existingFile.data.sourceChecksum === checksum) {
+      await copyLinkedDatasets(existingFile.content)
       await fs.copyFile(sourcePath, publicSourcePath)
       return { status: 'skipped', sourcePath, targetMarkdownPath }
     }
   }
 
   const { markdown, messages } = await convertDocxToMarkdown(sourcePath, collection, slug)
+  await copyLinkedDatasets(markdown)
   const existingRaw = await fileExists(targetMarkdownPath) ? await fs.readFile(targetMarkdownPath, 'utf8') : ''
   const existingFile = existingRaw ? parseMarkdownFile(existingRaw) : { data: {} }
   const inferredTitle = existingFile.data.title || extractFirstHeading(markdown) || humanizeSlug(slug)

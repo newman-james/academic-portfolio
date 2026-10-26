@@ -61,7 +61,7 @@ export async function findDocxFiles(targetPath) {
         return findDocxFiles(fullPath)
       }
 
-      if (entry.isFile() && entry.name.toLowerCase().endsWith('.docx')) {
+      if (entry.isFile() && !entry.name.startsWith('~$') && entry.name.toLowerCase().endsWith('.docx')) {
         return [fullPath]
       }
 

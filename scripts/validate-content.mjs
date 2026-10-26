@@ -9,6 +9,8 @@ import {
   parseMarkdownFile,
   projectRoot,
   supportedStatuses,
+  checksumFile,
+  publicDocumentsRoot,
 } from './lib/content-utils.mjs'
 
 async function findMarkdownFiles(targetPath) {
@@ -108,6 +110,19 @@ async function main() {
   }
 
   const docxFiles = await findDocxFiles(docsRoot)
+  const manifestPath = path.join(publicDocumentsRoot, 'pdf-manifest.json')
+  const pdfManifest = await fileExists(manifestPath)
+    ? JSON.parse(await fs.readFile(manifestPath, 'utf8'))
+    : {}
+  for (const source of docxFiles.filter(file => path.relative(docsRoot, file).startsWith(`writing${path.sep}`))) {
+    const relative = path.relative(docsRoot, source).split(path.sep).join('/')
+    const pdf = path.join(publicDocumentsRoot, relative.replace(/\.docx$/i, '.pdf'))
+    if (!pdfManifest[relative] || !(await fileExists(pdf))) {
+      issues.push(`${relative}: missing Word PDF export; run npm run docs:pdf`)
+    } else if (pdfManifest[relative].sourceChecksum !== await checksumFile(source) || pdfManifest[relative].pdfChecksum !== await checksumFile(pdf)) {
+      issues.push(`${relative}: stale or changed Word PDF export; run npm run docs:pdf`)
+    }
+  }
   console.log(`Validated ${markdownFiles.length} Markdown files against ${docxFiles.length} source .docx files.`)
 
   if (issues.length) {

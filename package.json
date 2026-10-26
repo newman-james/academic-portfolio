@@ -7,6 +7,7 @@
     "dev": "vite",
     "docs:convert": "node scripts/convert-docs.mjs",
     "docs:validate": "node scripts/validate-content.mjs",
+    "docs:pdf": "node scripts/export-pdfs.mjs",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"

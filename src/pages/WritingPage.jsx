@@ -2,13 +2,12 @@ import { Button, Column, Grid, InlineNotification, Tile } from '@carbon/react'
 import { ArrowRight, Document, Download, Maximize, Minimize } from '@carbon/icons-react'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
-import { allWriting, visibleWriting } from '../content/collections.js'
+import { visibleWriting } from '../content/collections.js'
 import MarkdownArticle from '../components/MarkdownArticle.jsx'
 import PageShell from '../components/PageShell.jsx'
 import { siteDescription } from '../data/site.js'
 import useDocumentMeta from '../hooks/useDocumentMeta.js'
 import { formatDate, formatReadingTime, getDisplaySummary, sortByDateDescending, truncateToWordCount } from '../utils/content.js'
-import { exportWritingToPdf } from '../utils/writingPdf.js'
 import './WritingPage.scss'
 
 const CATALOGUE_EXCERPT_WORD_LIMIT = 19
@@ -33,11 +32,9 @@ function WritingPage({ printMode = false }) {
   const navigate = useNavigate()
   const { slug } = useParams()
   const [searchParams] = useSearchParams()
-  const [exportState, setExportState] = useState('idle')
   const [exportError, setExportError] = useState('')
   const [isArticleFullscreen, setIsArticleFullscreen] = useState(false)
-  const availableWriting = visibleWriting.length ? visibleWriting : allWriting
-  const orderedWriting = useMemo(() => sortByDateDescending(availableWriting), [availableWriting])
+  const orderedWriting = useMemo(() => sortByDateDescending(visibleWriting), [])
   const selectedEntry = useMemo(
     () => orderedWriting.find((entry) => entry.slug === slug) ?? orderedWriting[0] ?? null,
     [orderedWriting, slug],
@@ -47,6 +44,7 @@ function WritingPage({ printMode = false }) {
     ? orderedWriting.filter((entry) => selectedEntry.relatedWriting?.includes(entry.id))
     : []
   const sourceDocumentUrl = selectedEntry ? getSourceDocumentUrl(selectedEntry.sourceDocument) : ''
+  const pdfDocumentUrl = sourceDocumentUrl.replace(/\.docx$/i, '.pdf')
   const openEntry = (entry) => {
     navigate(`/writing/${entry.slug}`)
   }
@@ -161,23 +159,6 @@ function WritingPage({ printMode = false }) {
     }
   }
 
-  const handleExportPdf = async () => {
-    if (!selectedEntry) {
-      return
-    }
-
-    setExportState('exporting')
-    setExportError('')
-
-    try {
-      await exportWritingToPdf({ entry: selectedEntry })
-      setExportState('idle')
-    } catch (error) {
-      setExportState('idle')
-      setExportError(error instanceof Error ? error.message : 'PDF export failed to initialise.')
-    }
-  }
-
   const documentArticle = selectedEntry ? (
     <article ref={documentArticleRef} className={`documentation-page__document${isArticleFullscreen ? ' documentation-page__document--fullscreen' : ''}`}>
       <div className="documentation-page__document-controls no-print">
@@ -204,12 +185,14 @@ function WritingPage({ printMode = false }) {
       <div className="writing-page__article-actions no-print">
         <div className="writing-page__toolbar">
           <Button
+            as="a"
+            href={pdfDocumentUrl}
+            download
             kind="primary"
             renderIcon={Download}
-            disabled={exportState === 'exporting'}
-            onClick={handleExportPdf}
+            disabled={!pdfDocumentUrl}
           >
-            {exportState === 'exporting' ? 'Preparing PDF...' : 'Download PDF'}
+            Download PDF
           </Button>
           <Button
             as="a"
