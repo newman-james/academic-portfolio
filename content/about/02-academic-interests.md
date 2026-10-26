@@ -1,5 +1,5 @@
 # Academic interests
 
-I am interested in the relationship between economics, business and public policy, particularly how major companies, financial markets and governments respond to uncertainty and change. My reading often focuses on international trade, investment, technological development and the growing economic importance of Asia.
+Writing these articles has taught me that understanding an economic problem is rarely as straightforward as it first appears. Theories provide useful ways of explaining events, but applying them requires careful consideration of evidence, assumptions and changing circumstances.
 
-I am also interested in how evidence is used to support competing arguments. Through the work in this portfolio, I compare historical context with current reporting and consider how economic decisions affect businesses, institutions and wider society.
+I have become more confident in researching unfamiliar topics, questioning my initial ideas and explaining complex arguments clearly. I also recognise that I have much more to learn. I intend to keep developing this portfolio as I prepare for university, building on my interests in finance, economics and the role financial decisions play in shaping society.

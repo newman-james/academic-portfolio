@@ -1,6 +1,7 @@
 @use '@carbon/react/scss/breakpoint' as *;
 @use '@carbon/react/scss/spacing' as *;
 @use '@carbon/react/scss/type' as *;
+@use '@carbon/type/scss/scale' as carbon-scale;
 
 .writing-page {
   padding-bottom: $spacing-09;
@@ -48,8 +49,8 @@
   align-items: start;
   padding-top: $spacing-07;
 
-  @include breakpoint-down(md) {
-    grid-template-columns: 1fr;
+  @include breakpoint-down(lg) {
+    grid-template-columns: minmax(0, 1fr);
     gap: $spacing-05;
   }
 }
@@ -60,7 +61,9 @@
   display: grid;
   gap: $spacing-04;
 
-  @include breakpoint-down(md) {
+  min-inline-size: 0;
+
+  @include breakpoint-down(lg) {
     position: static;
   }
 }
@@ -72,6 +75,10 @@
   border: 1px solid var(--cds-border-subtle);
   background:
     linear-gradient(180deg, color-mix(in srgb, var(--cds-layer-02) 72%, transparent 28%) 0%, color-mix(in srgb, var(--cds-layer-01) 92%, transparent 8%) 100%);
+
+  @include breakpoint-down(md) {
+    padding: $spacing-05;
+  }
 }
 
 .documentation-page__panel-header {
@@ -105,8 +112,7 @@
   color: var(--cds-text-secondary);
 }
 
-.documentation-page__catalogue-list,
-.documentation-page__toc {
+.documentation-page__catalogue-list {
   display: grid;
   gap: $spacing-03;
 }
@@ -184,23 +190,20 @@
   }
 }
 
-.documentation-page__toc-link {
-  @include type-style('body-01');
-  display: block;
-  padding: $spacing-03 0;
-  color: var(--cds-text-primary);
-  text-decoration: none;
-  border-bottom: 1px solid transparent;
-
-  &:hover,
-  &:focus-visible {
-    border-color: var(--cds-border-interactive);
-  }
+.writing-page__export-frame {
+  position: fixed;
+  inline-size: 0;
+  block-size: 0;
+  opacity: 0;
+  pointer-events: none;
+  border: 0;
+  inset: 0;
 }
 
 .documentation-page__reader-stage {
   display: grid;
   gap: $spacing-05;
+  min-inline-size: 0;
 }
 
 .writing-page__article-actions {
@@ -212,14 +215,19 @@
 
 .writing-page__toolbar {
   display: flex;
+  flex-wrap: wrap;
   justify-content: flex-end;
   gap: $spacing-03;
   padding: $spacing-03 0 $spacing-04;
   border-bottom: 1px solid var(--cds-border-subtle);
 
   @include breakpoint-down(md) {
-    flex-wrap: wrap;
     justify-content: flex-start;
+
+    .cds--btn {
+      flex: 1 1 100%;
+      max-inline-size: none;
+    }
   }
 }
 
@@ -232,6 +240,13 @@
   background:
     radial-gradient(circle at top, color-mix(in srgb, var(--cds-layer-accent-01) 36%, transparent 64%) 0%, transparent 32%),
     linear-gradient(180deg, color-mix(in srgb, var(--cds-layer-02) 82%, transparent 18%) 0%, color-mix(in srgb, var(--cds-layer-01) 96%, transparent 4%) 100%);
+
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+
+  @include breakpoint-down(md) {
+    padding: $spacing-05;
+  }
 }
 
 .documentation-page__document--fullscreen {
@@ -266,6 +281,35 @@
   }
 
   .documentation-page__markdown {
+    [id] {
+      scroll-margin-top: $spacing-10;
+    }
+
+    sup[data-footnote-ref],
+    sup:has([data-footnote-ref]) {
+      line-height: 0;
+    }
+
+    h2#references ~ p {
+      padding-left: $spacing-06;
+      text-indent: -$spacing-06;
+      overflow-wrap: anywhere;
+    }
+
+    [data-footnotes] {
+      margin-top: $spacing-08;
+      padding-top: $spacing-06;
+      border-top: 1px solid var(--cds-border-subtle);
+
+      h2 {
+        margin-top: 0;
+      }
+
+      li p {
+        margin-bottom: $spacing-03;
+      }
+    }
+
     color: #000;
 
     h2,
@@ -289,6 +333,9 @@
   gap: $spacing-04;
   padding-bottom: $spacing-06;
   border-bottom: 1px solid var(--cds-border-subtle);
+  @include breakpoint-down(md) {
+    padding-right: $spacing-06;
+  }
 }
 
 .documentation-page__document-kicker {
@@ -363,6 +410,31 @@
 }
 
 .documentation-page__markdown {
+  p,
+  li,
+  th,
+  td {
+    @include type-style('body-01');
+    font-size: carbon-scale.type-scale(2) * 1.5;
+  }
+
+  sup {
+    font-size: carbon-scale.type-scale(1);
+    line-height: 0;
+    vertical-align: super;
+  }
+
+  [id] {
+    scroll-margin-top: $spacing-10;
+  }
+
+  h2#references ~ p {
+    @include type-style('body-01');
+    padding-left: $spacing-06;
+    text-indent: -$spacing-06;
+    overflow-wrap: anywhere;
+  }
+
   h2,
   h3,
   h4,
@@ -387,10 +459,8 @@
   }
 
   p {
-    @include type-style('body-01');
     color: var(--cds-text-primary);
     margin-bottom: $spacing-05;
-    line-height: 1.7;
     max-width: 46rem;
   }
 
@@ -439,10 +509,8 @@
     margin-bottom: $spacing-05;
 
     li {
-      @include type-style('body-01');
       margin-bottom: $spacing-03;
       color: var(--cds-text-primary);
-      line-height: 1.7;
     }
   }
 
@@ -453,7 +521,6 @@
 
     th,
     td {
-      @include type-style('body-compact-01');
       padding: $spacing-03 $spacing-04;
       border: 1px solid var(--cds-border-subtle-01);
       text-align: left;

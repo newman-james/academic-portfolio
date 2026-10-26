@@ -5,6 +5,5 @@ export const siteDescription =
 
 export const navigationItems = [
   { label: 'Writing', to: '/writing' },
-  { label: 'Reading', to: '/reading' },
   { label: 'About', to: '/about' },
 ]

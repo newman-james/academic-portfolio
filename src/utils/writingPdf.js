@@ -48,13 +48,7 @@ export const exportWritingToPdf = async ({ entry }) => {
 
   const iframe = document.createElement('iframe')
   iframe.setAttribute('aria-hidden', 'true')
-  iframe.style.position = 'fixed'
-  iframe.style.inlineSize = '0'
-  iframe.style.blockSize = '0'
-  iframe.style.opacity = '0'
-  iframe.style.pointerEvents = 'none'
-  iframe.style.border = '0'
-  iframe.style.inset = '0'
+  iframe.className = 'writing-page__export-frame'
   iframe.src = buildPrintUrl({ entry })
   activeExportFrame = iframe
 

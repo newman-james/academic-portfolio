@@ -29,25 +29,40 @@ const turndownService = new TurndownService({
 
 turndownService.use(gfm)
 
+turndownService.addRule('footnoteReference', {
+  filter: (node) => node.nodeName === 'SUP' && /^#footnote-\d+$/.test(node.firstChild?.getAttribute?.('href') || ''),
+  replacement: (_content, node) => `[^${node.firstChild.getAttribute('href').slice('#footnote-'.length)}]`,
+})
+
+turndownService.addRule('footnoteBacklink', {
+  filter: (node) => node.nodeName === 'A' && /^#footnote-ref-\d+$/.test(node.getAttribute('href') || ''),
+  replacement: () => '',
+})
+
+turndownService.addRule('footnoteDefinition', {
+  filter: (node) => node.nodeName === 'LI' && /^footnote-\d+$/.test(node.getAttribute('id') || ''),
+  replacement: (content, node) => {
+    const label = node.getAttribute('id').slice('footnote-'.length)
+    return `\n\n[^${label}]: ${content.trim().replace(/\n/g, '\n    ')}\n\n`
+  },
+})
+
+turndownService.addRule('footnoteList', {
+  filter: (node) => node.nodeName === 'OL' && Array.from(node.childNodes)
+    .filter((child) => child.nodeType === 1)
+    .every((child) => /^footnote-\d+$/.test(child.getAttribute('id') || '')),
+  replacement: (content) => `\n\n${content.trim()}\n\n`,
+})
+
 const mammothStyleMap = [
   "p[style-name='Title'] => h1:fresh",
   "p[style-name='Subtitle'] => p:fresh",
+  "p[style-name='Bibliography'] => p:fresh",
 ]
 
 function extractFirstHeading(markdown) {
   const match = markdown.match(/^#\s+(.+)$/m)
   return match ? match[1].trim() : ''
-}
-
-function extractLeadingParagraph(markdown) {
-  const lines = markdown.trim().split('\n')
-  const firstLine = lines[0]?.trim() || ''
-
-  if (!firstLine || firstLine.startsWith('# ') || firstLine.startsWith('<')) {
-    return ''
-  }
-
-  return firstLine
 }
 
 function stripLeadingTitleHeading(markdown, title) {
@@ -62,17 +77,6 @@ function stripLeadingTitleHeading(markdown, title) {
   }
 
   return markdown.trim()
-}
-
-function stripLeadingParagraph(markdown, paragraph) {
-  const trimmedMarkdown = markdown.trim()
-  const lines = trimmedMarkdown.split('\n')
-
-  if (!paragraph || lines[0]?.trim() !== paragraph.trim()) {
-    return trimmedMarkdown
-  }
-
-  return lines.slice(1).join('\n').trim()
 }
 
 function createWritingFrontmatter(existingData, metadata) {
@@ -178,8 +182,8 @@ async function convertOneFile(sourcePath) {
   const existingFile = existingRaw ? parseMarkdownFile(existingRaw) : { data: {} }
   const inferredTitle = existingFile.data.title || extractFirstHeading(markdown) || humanizeSlug(slug)
   const markdownWithoutTitle = stripLeadingTitleHeading(markdown, inferredTitle)
-  const inferredSubtitle = existingFile.data.subtitle || extractLeadingParagraph(markdownWithoutTitle) || ''
-  const cleanedMarkdown = stripLeadingParagraph(markdownWithoutTitle, inferredSubtitle)
+  const inferredSubtitle = existingFile.data.subtitle || ''
+  const cleanedMarkdown = markdownWithoutTitle
   const readingTime = estimateReadingTime(cleanedMarkdown)
   const metadata = {
     checksum,

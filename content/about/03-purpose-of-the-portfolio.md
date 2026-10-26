@@ -1,5 +1,5 @@
 # Purpose of the portfolio
 
-I created this portfolio to bring together my academic writing, reading and independent research in one place. It allows me to show how my interests have developed over time and how I move from an initial question to a clearer, evidence-based argument.
+I created this portfolio to bring together my independent writing and explore economic questions beyond the classroom. My articles examine different aspects of finance and economics, from Singapore's use of exchange-rate policy to control inflation to the challenges facing the US Federal Reserve.
 
-The portfolio also records the process behind the finished work. By revisiting earlier ideas, comparing sources and refining my conclusions, I can demonstrate subject engagement, independent study and the development of my academic judgement.
+I have also explored whether artificial intelligence can predict financial-market movements, drawing on the competing ideas of Eugene Fama and Andrew Lo. Writing these articles has encouraged me to look beyond headlines, investigate economic theories and consider different explanations before reaching my own conclusions.

@@ -70,6 +70,10 @@ Every push to `main` rebuilds the site and publishes the contents of `dist/` to 
 
 ## Editorial workflow
 
+Place James's original Word documents (`.docx`) in `docs/writing/`. The three original essays replace the sample content. Curated publication dates use `YYYY-MM` when only a month is known; the UI displays the month and year without inventing a day.
+
+Word footnotes are converted to Markdown footnotes for review. The AI essay's online edition uses superscript citation numbers linked directly to its numbered references, without a separate Notes section. References retain source formatting and DOI links. These are presentation features, not a claim that the portfolio has been peer reviewed.
+
 1. Save the Word document into `docs/`.
 2. Run `npm run docs:convert`.
 3. Review the generated Markdown and frontmatter in `content/`.

@@ -2,6 +2,7 @@
 @use '@carbon/react/scss/breakpoint' as *;
 @use '@carbon/react/scss/spacing' as *;
 @use '@carbon/react/scss/type' as *;
+@use '@carbon/type/scss/scale' as carbon-scale;
 
 :root {
   color-scheme: light dark;
@@ -237,11 +238,17 @@ html[data-carbon-theme='g100'] .app-shell__header {
   background-color: var(--portfolio-shell-surface) !important;
 }
 
-.app-shell__content {
+.app-shell .app-shell__content.cds--content {
   min-height: calc(100vh - 3rem);
   padding-top: 3rem;
   background: var(--portfolio-bg);
   overflow-x: hidden;
+
+  @include breakpoint-down(lg) {
+    margin-inline: 0;
+    padding-inline: $spacing-05;
+    min-inline-size: 0;
+  }
 }
 
 .page-header,
@@ -500,7 +507,7 @@ html[data-carbon-theme='g100'] .app-shell__header {
   display: grid;
   gap: $spacing-05;
 
-  @include breakpoint-up(md) {
+  @include breakpoint-up(lg) {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
@@ -508,6 +515,12 @@ html[data-carbon-theme='g100'] .app-shell__header {
 .about-tile__markdown {
   display: grid;
   gap: $spacing-04;
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+.about-tile__markdown h2 {
+  font-size: carbon-scale.type-scale(5) * 1.5;
 }
 
 .about-tile__markdown h2,
@@ -523,8 +536,8 @@ html[data-carbon-theme='g100'] .app-shell__header {
 .about-tile__markdown p,
 .about-tile__markdown li {
   @include type-style('body-01');
-  color: var(--portfolio-text-secondary);
-  line-height: 1.7;
+  font-size: carbon-scale.type-scale(2) * 1.5;
+  color: var(--cds-text-primary);
 }
 
 .subject-teaser h3 {

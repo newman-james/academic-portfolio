@@ -23,6 +23,7 @@ function MarkdownArticle({ content, className = 'article-body' }) {
       <ReactMarkdown
         rehypePlugins={[rehypeRaw]}
         remarkPlugins={[remarkGfm]}
+        remarkRehypeOptions={{ footnoteLabel: 'Notes', footnoteBackLabel: 'Back to citation' }}
         components={{
           a: ({ href, children, ...props }) => {
             const isExternal = /^https?:\/\//.test(href || '')

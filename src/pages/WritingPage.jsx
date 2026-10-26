@@ -13,25 +13,6 @@ import './WritingPage.scss'
 
 const CATALOGUE_EXCERPT_WORD_LIMIT = 19
 
-function slugifyHeading(value) {
-  return String(value)
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-|-$/g, '')
-}
-
-function extractTableOfContents(markdown) {
-  return markdown
-    .split('\n')
-    .map((line) => line.match(/^(#{1,3})\s+(.+)$/))
-    .filter(Boolean)
-    .map((match) => ({
-      id: slugifyHeading(match[2]),
-      heading: match[2].trim(),
-      level: match[1].length,
-    }))
-}
-
 function estimateWordCount(body) {
   return String(body)
     .replace(/<[^>]+>/g, ' ')
@@ -62,7 +43,6 @@ function WritingPage({ printMode = false }) {
     [orderedWriting, slug],
   )
   const autoPrint = printMode && searchParams.get('autoprint') === '1'
-  const tableOfContents = selectedEntry ? extractTableOfContents(selectedEntry.body) : []
   const relatedPieces = selectedEntry
     ? orderedWriting.filter((entry) => selectedEntry.relatedWriting?.includes(entry.id))
     : []
@@ -225,7 +205,6 @@ function WritingPage({ printMode = false }) {
         <div className="writing-page__toolbar">
           <Button
             kind="primary"
-            size="sm"
             renderIcon={Download}
             disabled={exportState === 'exporting'}
             onClick={handleExportPdf}
@@ -257,8 +236,8 @@ function WritingPage({ printMode = false }) {
   ) : (
     <Tile className="documentation-page__panel">
       <div className="documentation-page__empty-state">
-        <h2>No writing selected</h2>
-        <p>Choose a writing entry from the catalogue to open the seeded reader.</p>
+        <h2>No writing available yet</h2>
+        <p>James's writing will appear here once it has been added to the portfolio.</p>
       </div>
     </Tile>
   )
@@ -291,7 +270,7 @@ function WritingPage({ printMode = false }) {
           <p className="documentation-page__page-eyebrow">Writing</p>
           <h1 className="documentation-page__page-title">James Newman academic writing portfolio</h1>
           <p className="documentation-page__page-copy">
-            A curated portfolio of essays and position papers demonstrating independent research, critical analysis and the development of evidence-led arguments across economics, business and contemporary affairs.
+            A collection of essays exploring economic ideas, financial markets and contemporary affairs through independent research, critical analysis and evidence-led argument.
           </p>
         </div>
       </header>
@@ -316,22 +295,6 @@ function WritingPage({ printMode = false }) {
                   <span>Reading time</span><strong>{formatReadingTime(selectedEntry.readingTime)}</strong>
                   <span>Date published</span><strong>{formatDate(selectedEntry.date)}</strong>
                 </div>
-              </Tile>
-
-              <Tile className="documentation-page__panel">
-                <div className="documentation-page__panel-header">
-                  <div>
-                    <h2 className="documentation-page__panel-title">Contents</h2>
-                  </div>
-                </div>
-
-                <nav className="documentation-page__toc" aria-label="Document contents">
-                  {tableOfContents.map((section) => (
-                    <a key={section.id} href={`#${section.id}`} className="documentation-page__toc-link">
-                      {section.heading}
-                    </a>
-                  ))}
-                </nav>
               </Tile>
 
               <Tile className="documentation-page__panel documentation-page__panel--documents">
