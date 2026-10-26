@@ -258,9 +258,9 @@ Arbitrary executable HTML is not enabled in the renderer.
 
 ## Images and extracted assets
 
-The Singapore essay is an unpublished review draft pending primary-source verification of the supplied inflation figures and citations. Its canonical Word document includes the supplied chart, caption, explanatory paragraph and source hyperlinks. The chart originates in `docs/data/singapore_sras.svg`; the underlying dataset is retained in `docs/data/singapore-sras.csv`. The data appendix has been removed. The compact explanatory paragraph includes the visualisation credit, RAWGraphs link and dataset download.
+The Singapore essay is published at the author's explicit request. Primary-source verification of the supplied inflation figures, publication details and policy chronology remains outstanding; publication does not indicate that these have been verified. Its canonical Word document includes the supplied chart, caption, explanatory paragraph and source hyperlinks. The chart originates in `docs/data/singapore_sras.svg`; the underlying dataset is retained in `docs/data/singapore-sras.csv`. The data appendix has been removed. The compact explanatory paragraph includes the visualisation credit, RAWGraphs link and dataset download.
 
-Run `npm run docs:convert -- "singapore"` after editing the Word source. The generated article, extracted chart and public Word download must come from that conversion, not from a separate website-only component. Visible verification notices were removed at the author's request; review status remains unchanged. Review entries are visible only in local development, not production; do not deploy the Singapore draft until the official MAS/MTI data, publication details and policy chronology have been verified.
+Run `npm run docs:convert -- "singapore"` after editing the Word source. The generated article, extracted chart and public Word download must come from that conversion, not from a separate website-only component. Visible verification notices were removed at the author's request. The author subsequently authorised publication, overriding the earlier review-only hold. Review entries in general remain visible only in local development, not production.
 
 ### Downloadable Word and PDF documents
 

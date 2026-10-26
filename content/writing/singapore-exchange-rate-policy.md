@@ -11,7 +11,7 @@ type: Essay
 date: 2026-10
 readingTime: 2
 featured: false
-status: review
+status: published
 tags:
   - Singapore
   - Exchange rates
