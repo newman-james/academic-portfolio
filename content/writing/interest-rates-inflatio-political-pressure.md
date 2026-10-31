@@ -8,7 +8,7 @@ subtitle: ''
 summary: An analysis of the tensions between interest-rate cuts, inflation and political pressure on the Federal Reserve.
 subject: Monetary policy
 type: Essay
-date: '2026-09'
+date: '2026-07'
 readingTime: 2
 featured: false
 status: published

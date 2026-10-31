@@ -8,7 +8,7 @@ summary: >-
   imported inflation during an energy shock.
 subject: Monetary policy
 type: Essay
-date: 2026-10
+date: 2026-08
 readingTime: 2
 featured: false
 status: published

@@ -6,7 +6,7 @@ subtitle: ''
 summary: An examination of machine learning, market efficiency and the limits of predicting financial prices.
 subject: Financial economics
 type: Essay
-date: '2026-11'
+date: '2026-08'
 readingTime: 3
 featured: false
 status: published
