@@ -44,3 +44,11 @@ test('validates dataset mapping against figure number and caption', async () => 
   assert.throws(() => validateFigureDatasets(entry.content, { 3: entry.data.figureDatasets[1] }), /caption does not match/)
   assert.throws(() => validateFigureDatasets(`${entry.content}\n\n![x](image.png)\n\nFigure 1. Duplicate\n`, entry.data.figureDatasets), /duplicated/)
 })
+
+test('the EV article maps both charts to the supplied datasets', async () => {
+  const file = '../content/writing/european-industrial-policy-and-the-economic-consequences-of-chinese-ev-competition.md'
+  const entry = parseMarkdownFile(await readFile(new URL(file, import.meta.url), 'utf8'))
+  assert.doesNotThrow(() => validateFigureDatasets(entry.content, entry.data.figureDatasets))
+  assert.equal(entry.data.figureDatasets[1].file, 'figure1_eu_battery_electric_imports_china_share_2021_2025_rawgraphs.csv')
+  assert.equal(entry.data.figureDatasets[2].file, 'figure2_china_manufactured_bev_share_selected_eu_2024h1_rawgraphs.csv')
+})

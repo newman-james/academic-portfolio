@@ -57,6 +57,10 @@ test('the published essays map every citation to its intended source', async () 
       'Housing Bureau. _Housing in Figures 2026_', 'Housing Bureau. ‘Housing Bureau - Publications',
       'Wong, Michael B.', 'Ronald, Richard,',
     ]],
+    ['european-industrial-policy-and-the-economic-consequences-of-chinese-ev-competition.md', [
+      'European Commission.', 'Otero-Iglesias, Miguel,', 'Brander, James A.,',
+      'Rodrik, Dani.', 'Geels, Frank W.', 'Kramer, Niklas.', 'Dou, Hao,',
+    ]],
   ]
   for (const [file, references] of files) {
     const entry = parseMarkdownFile(await readFile(new URL(`../content/writing/${file}`, import.meta.url), 'utf8'))
@@ -65,4 +69,11 @@ test('the published essays map every citation to its intended source', async () 
       assert.ok(result.includes(`<span id="reference-${index + 1}"></span>${index + 1}. ${prefix}`), `${file}: reference ${index + 1}`)
     }
   }
+})
+
+test('repeated European Commission citations link to the same reference', async () => {
+  const file = '../content/writing/european-industrial-policy-and-the-economic-consequences-of-chinese-ev-competition.md'
+  const entry = parseMarkdownFile(await readFile(new URL(file, import.meta.url), 'utf8'))
+  const result = formatReferenceCitations(entry.content, entry.data.referenceCitations)
+  assert.equal(Array.from(result.matchAll(/href="#reference-1"/g)).length, 2)
 })
