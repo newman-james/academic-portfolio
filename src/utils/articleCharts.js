@@ -3,7 +3,7 @@ import { csvParse } from 'd3-dsv'
 export function parseArticleChart(csv, config) {
   if (!config || !['line', 'bar'].includes(config.type) ||
       ![config.x, config.y, config.yLabel].every(value => typeof value === 'string' && value.trim()) ||
-      (config.type === 'line' && (typeof config.series !== 'string' || !config.series.trim())) ||
+      (config.series !== undefined && (typeof config.series !== 'string' || !config.series.trim())) ||
       (config.xFormat !== undefined && config.xFormat !== 'month') ||
       (config.status !== undefined && (typeof config.status !== 'string' || !config.status.trim()))) {
     throw new Error('Chart configuration must specify a supported type, columns and axis label.')

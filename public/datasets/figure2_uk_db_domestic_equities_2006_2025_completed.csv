@@ -1,0 +1,19 @@
+year,UK equities (% of total DB pension assets),data_status,total_equities_pct,uk_share_of_equities_pct,source_url
+2008,25.73,calculated_from_PPF_weighted_averages,53.6,48,https://www.ppf.co.uk/-/media/PPF-Website/Public/Files/file-2018-10/P/purple_book_2015.pdf
+2009,20.51,calculated_from_PPF_weighted_averages,46.4,44.2,https://www.ppf.co.uk/-/media/PPF-Website/Public/Files/file-2018-10/P/purple_book_2015.pdf
+2010,16.84,calculated_from_PPF_weighted_averages,42,40.1,https://www.ppf.co.uk/-/media/PPF-Website/Public/Files/file-2018-10/P/purple_book_2015.pdf
+2011,15.62,calculated_from_PPF_weighted_averages,41.1,38,https://www.ppf.co.uk/-/media/PPF-Website/Public/Files/file-2018-10/P/purple_book_2015.pdf
+2012,13.05,calculated_from_PPF_weighted_averages,38.5,33.9,https://www.ppf.co.uk/-/media/PPF-Website/Public/Files/file-2018-10/P/purple_book_2015.pdf
+2013,10.88,calculated_from_PPF_weighted_averages,35.1,31,https://www.ppf.co.uk/-/media/PPF-Website/Public/Files/file-2018-10/P/purple_book_2015.pdf
+2014,10.12,calculated_from_PPF_weighted_averages,35,28.9,https://www.ppf.co.uk/-/media/PPF-Website/Public/Files/file-2018-10/P/purple_book_2015.pdf
+2015,8.45,calculated_from_PPF_weighted_averages,33,25.6,https://www.ppf.co.uk/-/media/PPF-Website/Public/Files/file-2018-10/P/purple_book_2015.pdf
+2016,6.79,calculated_from_PPF_weighted_averages,30.3,22.4,https://www.ppf.co.uk/-/media/PPF-Website/Public/Purple-Book-Data-2025/Pension-Protection-Fund-Purple-Book-2025-accessible.pdf
+2017,5.95,calculated_from_PPF_weighted_averages,29,20.5,https://www.ppf.co.uk/-/media/PPF-Website/Public/Purple-Book-Data-2025/Pension-Protection-Fund-Purple-Book-2025-accessible.pdf
+2018,5.02,calculated_from_PPF_weighted_averages,27,18.6,https://www.ppf.co.uk/-/media/PPF-Website/Public/Purple-Book-Data-2025/Pension-Protection-Fund-Purple-Book-2025-accessible.pdf
+2019,3.98,calculated_from_PPF_weighted_averages,24,16.6,https://www.ppf.co.uk/-/media/PPF-Website/Public/Purple-Book-Data-2025/Pension-Protection-Fund-Purple-Book-2025-accessible.pdf
+2020,2.71,calculated_from_PPF_weighted_averages,20.4,13.3,https://www.ppf.co.uk/-/media/PPF-Website/Public/Purple-Book-Data-2025/Pension-Protection-Fund-Purple-Book-2025-accessible.pdf
+2021,2.2,calculated_from_PPF_weighted_averages,19,11.6,https://www.ppf.co.uk/-/media/PPF-Website/Public/Purple-Book-Data-2025/Pension-Protection-Fund-Purple-Book-2025-accessible.pdf
+2022,1.93,calculated_from_PPF_weighted_averages,19.5,9.9,https://www.ppf.co.uk/-/media/PPF-Website/Public/Purple-Book-Data-2025/Pension-Protection-Fund-Purple-Book-2025-accessible.pdf
+2023,1.43,calculated_from_PPF_weighted_averages,18.8,7.6,https://www.ppf.co.uk/-/media/PPF-Website/Public/Purple-Book-Data-2025/Pension-Protection-Fund-Purple-Book-2025-accessible.pdf
+2024,1.02,calculated_from_PPF_weighted_averages,15.5,6.6,https://www.ppf.co.uk/-/media/PPF-Website/Public/Purple-Book-Data-2025/Pension-Protection-Fund-Purple-Book-2025-accessible.pdf
+2025,0.74,calculated_from_PPF_weighted_averages,15.1,4.9,https://www.ppf.co.uk/-/media/PPF-Website/Public/Purple-Book-Data-2025/Pension-Protection-Fund-Purple-Book-2025-accessible.pdf

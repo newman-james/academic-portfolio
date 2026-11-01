@@ -36,9 +36,31 @@ test('does not consume unrelated text after an image', () => {
   assert.equal(tree.children[2].children[0].value, 'Not a caption')
 })
 
+test('recognises and numbers images wrapped in emphasis', () => {
+  const image = element('img')
+  const tree = {
+    type: 'root',
+    children: [
+      element('p', [element('em', [image])]),
+      text('\n'),
+      element('p', [text('Figure 1. Emphasised image')]),
+    ],
+  }
+
+  rehypeArticleFigures()(tree)
+
+  assert.equal(tree.children[0].tagName, 'figure')
+  assert.equal(image.properties.dataFigureNumber, '1')
+  assert.equal(tree.children[0].children[1].tagName, 'figcaption')
+})
+
 test('validates dataset mapping against figure number and caption', async () => {
   const entry = parseMarkdownFile(await readFile(new URL('../content/writing/the-political-economy-of-hong-kong-s-housing-crisis.md', import.meta.url), 'utf8'))
   assert.doesNotThrow(() => validateFigureDatasets(entry.content, entry.data.figureDatasets))
+  assert.doesNotThrow(() => validateFigureDatasets(
+    '_![Chart](chart.png)_\n\nFigure 1. Chart',
+    { 1: { caption: 'Chart', file: 'chart.csv' } },
+  ))
   assert.throws(() => validateFigureDatasets(entry.content, { 1: { ...entry.data.figureDatasets[1], caption: 'Wrong chart' } }), /caption does not match/)
   assert.throws(() => validateFigureDatasets(entry.content, { 1: { ...entry.data.figureDatasets[1], file: '../other.csv' } }), /CSV filename/)
   assert.throws(() => validateFigureDatasets(entry.content, { 3: entry.data.figureDatasets[1] }), /caption does not match/)

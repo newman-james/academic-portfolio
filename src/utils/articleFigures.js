@@ -26,6 +26,18 @@ function parseCaption(text) {
   return /^Figure\s+(\d+)(?:\.\s*|\s+|(?=[A-Za-z]))/.exec(text)
 }
 
+function containsImage(node) {
+  return node.tagName === 'img' || node.children?.some(containsImage)
+}
+
+function assignFigureNumber(node, number) {
+  if (node.tagName === 'img') {
+    node.properties.dataFigureNumber = number
+    return
+  }
+  node.children?.forEach(child => assignFigureNumber(child, number))
+}
+
 export function rehypeArticleFigures() {
   return (tree) => {
     function visit(parent) {
@@ -33,7 +45,7 @@ export function rehypeArticleFigures() {
 
       for (let index = 0; index < parent.children.length; index += 1) {
         const node = parent.children[index]
-        if (node.tagName === 'p' && node.children.some((child) => child.tagName === 'img')) {
+        if (node.tagName === 'p' && node.children.some(containsImage)) {
           let nextIndex = index + 1
           while (parent.children[nextIndex]?.type === 'text' && !parent.children[nextIndex].value.trim()) {
             nextIndex += 1
@@ -44,9 +56,7 @@ export function rehypeArticleFigures() {
           node.properties = { className: ['article-figure'] }
           if (match) {
             node.properties.dataFigureNumber = match[1]
-            for (const child of node.children) {
-              if (child.tagName === 'img') child.properties.dataFigureNumber = match[1]
-            }
+            node.children.forEach(child => assignFigureNumber(child, match[1]))
             const remainder = stripPrefix(caption.children, match[0].length).nodes
             node.children.push({
               ...caption,
@@ -72,7 +82,7 @@ export function validateFigureDatasets(markdown, datasets) {
     throw new Error('Figure datasets must be a non-empty mapping.')
   }
   const captions = new Map()
-  for (const match of markdown.matchAll(/!\[[^\]]*\]\([^\n)]+\)[ \t]*\r?\n[ \t]*\r?\n([^\r\n]+)/g)) {
+  for (const match of markdown.matchAll(/!\[[^\]]*\]\([^\n)]+\)[_*]?[ \t]*\r?\n[ \t]*\r?\n([^\r\n]+)/g)) {
     const text = match[1].replace(/\*\*|__/g, '')
     const label = parseCaption(text)
     if (!label) continue

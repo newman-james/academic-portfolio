@@ -114,7 +114,7 @@ function ArticleChart({ dataset, number }) {
   return (
     <div className="article-chart">
       <p className="article-chart__unit">{config.yLabel}</p>
-      {config.type === 'line' && (
+      {config.type === 'line' && config.series && (
         <ul className="article-chart__legend" aria-label="Chart series">
           {series.map((name, index) => (
             <li key={name}><span className={index % 2 ? 'article-chart__swatch article-chart__swatch--dashed' : 'article-chart__swatch'} style={{ borderColor: colours[index % colours.length] }} />{name}</li>
@@ -138,7 +138,7 @@ function ArticleChart({ dataset, number }) {
       <dialog ref={dialogRef} id={dialogId} className="article-image-dialog no-print" aria-label={`Fullscreen Figure ${number}`} onClose={() => expandRef.current?.focus()}>
         <form method="dialog"><Button type="submit" kind="tertiary" size="sm" renderIcon={Minimize} autoFocus>Close fullscreen chart</Button></form>
         <p>{dataset.caption} — {config.yLabel}</p>
-        {config.type === 'line' && <ul className="article-chart__legend">{series.map((name, index) => <li key={name}><span className={index % 2 ? 'article-chart__swatch article-chart__swatch--dashed' : 'article-chart__swatch'} style={{ borderColor: colours[index % colours.length] }} />{name}</li>)}</ul>}
+        {config.type === 'line' && config.series && <ul className="article-chart__legend">{series.map((name, index) => <li key={name}><span className={index % 2 ? 'article-chart__swatch article-chart__swatch--dashed' : 'article-chart__swatch'} style={{ borderColor: colours[index % colours.length] }} />{name}</li>)}</ul>}
         <div className="article-image-dialog-content article-chart__scroll" tabIndex={0}>{graphic}</div>
         {config.note && <p className="article-chart__note">{config.note}</p>}
       </dialog>
