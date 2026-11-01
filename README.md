@@ -89,6 +89,12 @@ Run `npm run docs:convert -- --force "filename"` to regenerate content even when
 the Word file has not changed. Curated citation mappings survive regeneration.
 Word's cached figure sequence numbers are preserved in generated captions. Update
 figure fields in Word before conversion so the saved numbers are current.
+Figure captions share a consistent UI style. To offer a CSV download beside a
+figure, add a `figureDatasets` entry keyed by figure number, with a unique
+`caption` prefix and the CSV `file` name from `docs/data/`. Conversion copies
+the CSV unchanged into `public/datasets/`; validation checks the caption and
+the source and public dataset checksums. These download controls are website
+navigation, not changes to the Word article or its native PDF.
 
 1. Save the Word document into `docs/`.
 2. Run `npm run docs:convert`.

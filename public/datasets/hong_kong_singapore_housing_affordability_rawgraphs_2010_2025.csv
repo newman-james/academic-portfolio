@@ -1,0 +1,29 @@
+﻿Year,City,Median_multiple,Data_period,Report_edition,Status,Source_URL,Notes
+2012,Hong Kong,13.5,Q3 2012,2013,Published,https://www.demographia.com/dhi2013.pdf,Hong Kong market estimate; comparison with Singapore HDB resale is not tenure-matched.
+2012,Singapore,5.9,Q3 2012,2013,Provisional,https://www.demographia.com/dhi2013.pdf,Demographia 2013 supplement; income data covered households with workers only; not formally included in the 2013 survey.
+2013,Hong Kong,14.9,Q3 2013,2014,Published,https://www.demographia.com/dhi2014.pdf,Hong Kong market estimate; comparison with Singapore HDB resale is not tenure-matched.
+2013,Singapore,5.1,Q3 2013,2014,Published,https://www.demographia.com/dhi2014.pdf,Singapore HDB resale market (not all private housing).
+2014,Hong Kong,17,Q3 2014,2015,Published,https://www.demographia.com/dhi2015.pdf,Hong Kong market estimate; comparison with Singapore HDB resale is not tenure-matched.
+2014,Singapore,5,Q3 2014,2015,Published,https://www.demographia.com/dhi2015.pdf,Singapore HDB resale market (not all private housing).
+2015,Hong Kong,19,Q3 2015,2016,Published,https://www.demographia.com/dhi2016.pdf,Hong Kong market estimate; comparison with Singapore HDB resale is not tenure-matched.
+2015,Singapore,5,Q3 2015,2016,Published,https://www.demographia.com/dhi2016.pdf,Singapore HDB resale market (not all private housing).
+2016,Hong Kong,18.1,Q3 2016,2017,Published,https://www.demographia.com/dhi2017.pdf,Hong Kong market estimate; comparison with Singapore HDB resale is not tenure-matched.
+2016,Singapore,4.8,Q3 2016,2017,Published,https://www.demographia.com/dhi2017.pdf,Singapore HDB resale market (not all private housing).
+2017,Hong Kong,19.4,Q3 2017,2018,Published,https://www.demographia.com/dhi2018.pdf,Hong Kong market estimate; comparison with Singapore HDB resale is not tenure-matched.
+2017,Singapore,4.8,Q3 2017,2018,Published,https://www.demographia.com/dhi2018.pdf,Singapore HDB resale market (not all private housing).
+2018,Hong Kong,20.9,Q3 2018,2019,Published,https://www.demographia.com/dhi2019.pdf,Hong Kong market estimate; comparison with Singapore HDB resale is not tenure-matched.
+2018,Singapore,4.6,Q3 2018,2019,Published,https://www.demographia.com/dhi2019.pdf,Singapore HDB resale market (not all private housing).
+2019,Hong Kong,20.8,Q3 2019,2020,Published,https://www.demographia.com/dhi2020.pdf,Hong Kong market estimate; comparison with Singapore HDB resale is not tenure-matched.
+2019,Singapore,4.6,Q3 2019,2020,Published,https://www.demographia.com/dhi2020.pdf,Singapore HDB resale market (not all private housing).
+2020,Hong Kong,20.7,Q3 2020,2021,Published,https://www.demographia.com/dhi2021.pdf,Hong Kong market estimate; comparison with Singapore HDB resale is not tenure-matched.
+2020,Singapore,4.7,Q3 2020,2021,Published,https://www.demographia.com/dhi2021.pdf,Singapore HDB resale market (not all private housing).
+2021,Hong Kong,23.2,Q3 2021,2022,Published,https://www.demographia.com/dhi2022.pdf,Hong Kong market estimate; comparison with Singapore HDB resale is not tenure-matched.
+2021,Singapore,5.8,Q3 2021,2022,Published,https://www.demographia.com/dhi2022.pdf,Singapore HDB resale market (not all private housing).
+2022,Hong Kong,18.8,Q3 2022,2023,Published,https://www.newgeography.com/files/Demographia-International-Housing-Affordability-2023-Edition.pdf,Hong Kong market estimate; comparison with Singapore HDB resale is not tenure-matched.
+2022,Singapore,5.3,Q3 2022,2023,Published,https://www.newgeography.com/files/Demographia-International-Housing-Affordability-2023-Edition.pdf,Singapore HDB resale market (not all private housing).
+2023,Hong Kong,16.7,Q3 2023,2024,Published,https://www.asiancenturystocks.com/content/files/dhi.pdf,Hong Kong market estimate; comparison with Singapore HDB resale is not tenure-matched.
+2023,Singapore,3.8,Q3 2023,2024,Published (changed basis),https://www.asiancenturystocks.com/content/files/dhi.pdf,2024 edition introduced first-homebuyer grant adjustment to Singapore HDB resale affordability; do not interpret the 2022-2023 drop as entirely market-driven.
+2024,Hong Kong,14.4,Q3 2024,2025,Published,https://www.newgeography.com/files/Demographia-International-Housing-Affordability-2025-Edition.pdf,Hong Kong market estimate; comparison with Singapore HDB resale is not tenure-matched.
+2024,Singapore,4.2,Q3 2024,2025,Published (changed basis),https://www.newgeography.com/files/Demographia-International-Housing-Affordability-2025-Edition.pdf,2024 edition introduced first-homebuyer grant adjustment to Singapore HDB resale affordability; do not interpret the 2022-2023 drop as entirely market-driven.
+2025,Hong Kong,14.1,Q3 2025,2026,Published,https://frontiercentre.org/wp-content/uploads/Demographia-International-Housing-Affordability-2026-Edition-1.pdf,Hong Kong market estimate; comparison with Singapore HDB resale is not tenure-matched.
+2025,Singapore,4.3,Q3 2025,2026,Published (changed basis),https://frontiercentre.org/wp-content/uploads/Demographia-International-Housing-Affordability-2026-Edition-1.pdf,2024 edition introduced first-homebuyer grant adjustment to Singapore HDB resale affordability; do not interpret the 2022-2023 drop as entirely market-driven.

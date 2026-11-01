@@ -406,6 +406,12 @@
     margin-block: $spacing-06;
   }
 
+  .article-figure__dataset {
+    @include type-style('body-01');
+    margin-block-start: $spacing-03;
+    overflow-wrap: anywhere;
+  }
+
   .article-image-viewer {
     min-inline-size: 0;
     max-inline-size: 100%;

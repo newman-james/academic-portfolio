@@ -5,6 +5,7 @@ import ReactMarkdown from 'react-markdown'
 import rehypeRaw from 'rehype-raw'
 import remarkGfm from 'remark-gfm'
 import { formatReferenceCitations } from '../utils/referenceCitations.js'
+import { rehypeArticleFigures } from '../utils/articleFigures.js'
 
 function flattenChildren(children) {
   return Array.isArray(children)
@@ -61,35 +62,7 @@ function ArticleImage({ alt, src, title }) {
   )
 }
 
-function rehypeArticleFigures() {
-  return (tree) => {
-    function visit(parent) {
-      if (!parent.children) return
-
-      for (let index = 0; index < parent.children.length; index += 1) {
-        const node = parent.children[index]
-        if (node.tagName === 'p' && node.children.some((child) => child.tagName === 'img')) {
-          let nextIndex = index + 1
-          while (parent.children[nextIndex]?.type === 'text' && !parent.children[nextIndex].value.trim()) {
-            nextIndex += 1
-          }
-          const caption = parent.children[nextIndex]
-          const captionText = caption?.children?.map((child) => child.value || child.children?.map((part) => part.value || '').join('') || '').join('') || ''
-          node.tagName = 'figure'
-          node.properties = { className: ['article-figure'] }
-          if (caption?.tagName === 'p' && /^Figure \d+(?:\.|\s|(?=[A-Z]))/.test(captionText)) {
-            node.children.push({ ...caption, tagName: 'figcaption' })
-            parent.children.splice(index + 1, nextIndex - index)
-          }
-        }
-        visit(node)
-      }
-    }
-    visit(tree)
-  }
-}
-
-function MarkdownArticle({ content, className = 'article-body', referenceCitations }) {
+function MarkdownArticle({ content, className = 'article-body', referenceCitations, figureDatasets }) {
   return (
     <div className={className}>
       <ReactMarkdown
@@ -116,9 +89,20 @@ function MarkdownArticle({ content, className = 'article-body', referenceCitatio
           h2: ({ children, ...props }) => <h2 id={headingId(children)} {...props}>{children}</h2>,
           h3: ({ children, ...props }) => <h3 id={headingId(children)} {...props}>{children}</h3>,
           h4: ({ children, ...props }) => <h4 id={headingId(children)} {...props}>{children}</h4>,
-          figure: ({ children }) => (
+          figure: ({ children, node }) => (
             <figure className="article-figure">
               {children}
+              {figureDatasets?.[node.properties.dataFigureNumber] ? (
+                <div className="article-figure__dataset">
+                  <a
+                    href={assetUrl(`/datasets/${figureDatasets[node.properties.dataFigureNumber].file}`)}
+                    download={figureDatasets[node.properties.dataFigureNumber].file}
+                    aria-label={`Download Figure ${node.properties.dataFigureNumber} dataset (CSV)`}
+                  >
+                    Download dataset (CSV)
+                  </a>
+                </div>
+              ) : null}
             </figure>
           ),
           img: ({ alt, src, title }) => <ArticleImage alt={alt} src={src} title={title} />,

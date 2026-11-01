@@ -1,6 +1,7 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import { formatReferenceCitations } from '../src/utils/referenceCitations.js'
+import { validateFigureDatasets } from '../src/utils/articleFigures.js'
 import {
   contentRoot,
   docsRoot,
@@ -102,6 +103,27 @@ async function main() {
       }
       try {
         formatReferenceCitations(entry.content, entry.data.referenceCitations)
+      } catch (error) {
+        issues.push(`${relativePath}: ${error.message}`)
+      }
+    }
+
+    if (collection === 'writing' && entry.data.figureDatasets !== undefined) {
+      try {
+        validateFigureDatasets(entry.content, entry.data.figureDatasets)
+        if (entry.data.sourceDocument && await fileExists(path.join(docsRoot, entry.data.sourceDocument)) &&
+            entry.data.sourceChecksum !== await checksumFile(path.join(docsRoot, entry.data.sourceDocument))) {
+          issues.push(`${relativePath}: source Word document changed; run npm run docs:convert and review figure datasets`)
+        }
+        for (const dataset of Object.values(entry.data.figureDatasets)) {
+          const source = path.join(docsRoot, 'data', dataset.file)
+          const published = path.join(projectRoot, 'public', 'datasets', dataset.file)
+          if (!(await fileExists(source)) || !(await fileExists(published))) {
+            issues.push(`${relativePath}: missing figure dataset ${dataset.file}; run npm run docs:convert`)
+          } else if (await checksumFile(source) !== await checksumFile(published)) {
+            issues.push(`${relativePath}: stale figure dataset ${dataset.file}; run npm run docs:convert`)
+          }
+        }
       } catch (error) {
         issues.push(`${relativePath}: ${error.message}`)
       }

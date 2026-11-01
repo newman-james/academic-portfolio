@@ -180,7 +180,7 @@ function WritingPage({ printMode = false }) {
         <p className="documentation-page__document-summary">{selectedEntry.subtitle || getDisplaySummary(selectedEntry)}</p>
       </header>
 
-      <MarkdownArticle className="documentation-page__markdown markdown-content" content={selectedEntry.body} referenceCitations={selectedEntry.referenceCitations} />
+      <MarkdownArticle className="documentation-page__markdown markdown-content" content={selectedEntry.body} referenceCitations={selectedEntry.referenceCitations} figureDatasets={selectedEntry.figureDatasets} />
 
       <div className="writing-page__article-actions no-print">
         <div className="writing-page__toolbar">

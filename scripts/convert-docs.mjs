@@ -4,6 +4,7 @@ import mammoth from 'mammoth'
 import JSZip from 'jszip'
 import TurndownService from 'turndown'
 import { gfm } from 'turndown-plugin-gfm'
+import { validateFigureDatasets } from '../src/utils/articleFigures.js'
 import {
   checksumFile,
   contentRoot,
@@ -115,6 +116,7 @@ function createWritingFrontmatter(existingData, metadata) {
     teacherFeedback: existingData.teacherFeedback || '',
     reflection: existingData.reflection || '',
     ...(existingData.referenceCitations !== undefined ? { referenceCitations: existingData.referenceCitations } : {}),
+    ...(existingData.figureDatasets !== undefined ? { figureDatasets: existingData.figureDatasets } : {}),
     sourceChecksum: metadata.checksum,
   }
 }
@@ -188,8 +190,12 @@ async function convertDocxToMarkdown(sourcePath, collection, slug) {
   }
 }
 
-async function copyLinkedDatasets(markdown) {
+async function copyLinkedDatasets(markdown, figureDatasets) {
   const filenames = new Set(Array.from(markdown.matchAll(/href="\/datasets\/([a-zA-Z0-9_-]+\.csv)"/g), (match) => match[1]))
+  if (figureDatasets !== undefined) {
+    validateFigureDatasets(markdown, figureDatasets)
+    for (const dataset of Object.values(figureDatasets)) filenames.add(dataset.file)
+  }
   for (const filename of filenames) {
     const destination = path.join(projectRoot, 'public', 'datasets', filename)
     await ensureDirectory(path.dirname(destination))
@@ -213,16 +219,16 @@ async function convertOneFile(sourcePath, force = false) {
     const existingFile = parseMarkdownFile(existingRaw)
 
     if (!force && existingFile.data.sourceChecksum === checksum) {
-      await copyLinkedDatasets(existingFile.content)
+      await copyLinkedDatasets(existingFile.content, existingFile.data.figureDatasets)
       await fs.copyFile(sourcePath, publicSourcePath)
       return { status: 'skipped', sourcePath, targetMarkdownPath }
     }
   }
 
   const { markdown, messages } = await convertDocxToMarkdown(sourcePath, collection, slug)
-  await copyLinkedDatasets(markdown)
   const existingRaw = await fileExists(targetMarkdownPath) ? await fs.readFile(targetMarkdownPath, 'utf8') : ''
   const existingFile = existingRaw ? parseMarkdownFile(existingRaw) : { data: {} }
+  await copyLinkedDatasets(markdown, existingFile.data.figureDatasets)
   const inferredTitle = existingFile.data.title || extractFirstHeading(markdown) || humanizeSlug(slug)
   const markdownWithoutTitle = stripLeadingTitleHeading(markdown, inferredTitle)
   const inferredSubtitle = existingFile.data.subtitle || ''
