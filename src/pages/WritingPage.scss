@@ -320,13 +320,12 @@
 }
 
 .documentation-page__document-header {
+  container-type: inline-size;
   display: grid;
   gap: $spacing-04;
+  padding-inline-end: $spacing-07;
   padding-bottom: $spacing-06;
   border-bottom: 1px solid var(--cds-border-subtle);
-  @include breakpoint-down(md) {
-    padding-right: $spacing-06;
-  }
 }
 
 .documentation-page__document-kicker {
@@ -341,7 +340,7 @@
   @include type-style('heading-05');
   margin: 0;
   color: var(--cds-text-primary);
-  max-width: 44rem;
+  font-size: clamp(1.5rem, 4.2cqi, 2rem);
 }
 
 .documentation-page__document-meta,
@@ -618,6 +617,13 @@
 
   p.article-note {
     @include type-style('body-01');
+  }
+
+  > p:not(.article-note):not(:is(#references, #sources) ~ *),
+  > :is(blockquote, ul, ol):not(:is(#references, #sources) ~ *),
+  > :is(blockquote, ul, ol):not(:is(#references, #sources) ~ *) :is(p, li) {
+    font-family: Georgia, serif;
+    line-height: 1.5;
   }
 
   h2#sources {
