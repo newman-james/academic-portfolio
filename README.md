@@ -75,6 +75,9 @@ Place James's original Word documents (`.docx`) in `docs/writing/`. The three or
 
 Word footnotes are converted to Markdown footnotes for review. The AI essay's online edition uses superscript citation numbers linked directly to its numbered references, without a separate Notes section. References retain source formatting and DOI links. These are presentation features, not a claim that the portfolio has been peer reviewed.
 
+Word's cached figure sequence numbers are preserved in generated captions. Update
+figure fields in Word before conversion so the saved numbers are current.
+
 1. Save the Word document into `docs/`.
 2. Run `npm run docs:convert`.
 3. Review the generated Markdown and frontmatter in `content/`.
@@ -276,7 +279,8 @@ from Markdown or the browser's print view.
 After changing a writing document, run `npm run docs:convert`, then
 `npm run docs:pdf` on macOS with Microsoft Word installed. Word exports temporary
 copies without saving changes to the canonical documents. Office lock files are
-ignored. Commit the generated PDFs and `public/documents/pdf-manifest.json` along
+ignored. To export only matching files, run `npm run docs:pdf -- "filename"`.
+Commit the generated PDFs and `public/documents/pdf-manifest.json` along
 with the updated documents. `npm run docs:validate` checks source and PDF checksums
 to reject missing or stale exports; Linux CI uses these committed exports and does
 not require Word. Existing print routes remain available as browser print views.

@@ -1,6 +1,7 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import mammoth from 'mammoth'
+import JSZip from 'jszip'
 import TurndownService from 'turndown'
 import { gfm } from 'turndown-plugin-gfm'
 import {
@@ -145,8 +146,23 @@ async function convertDocxToMarkdown(sourcePath, collection, slug) {
 
   await ensureDirectory(assetDirectory)
 
+  const zip = await JSZip.loadAsync(await fs.readFile(sourcePath))
+  const documentPart = zip.file('word/document.xml')
+  if (!documentPart) throw new Error(`Missing document.xml in ${sourcePath}`)
+  const xml = await documentPart.async('string')
+  const resolvedFields = xml.replace(
+    /<w:fldSimple\b([^>]*)>([\s\S]*?)<\/w:fldSimple>/g,
+    (field, attributes, contents) => {
+      if (!/\bw:instr="[^"]*\bSEQ\s+Figure\b/i.test(attributes)) return field
+      if (!/<w:t(?:\s[^>]*)?>\s*\d+\s*<\/w:t>/.test(contents)) {
+        throw new Error(`Figure field has no cached number in ${sourcePath}; update fields in Word before conversion.`)
+      }
+      return contents
+    },
+  )
+  zip.file('word/document.xml', resolvedFields)
   const conversion = await mammoth.convertToHtml(
-    { path: sourcePath },
+    { buffer: await zip.generateAsync({ type: 'nodebuffer' }) },
     {
       styleMap: mammothStyleMap,
       convertImage: mammoth.images.imgElement(async (image) => {

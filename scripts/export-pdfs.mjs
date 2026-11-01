@@ -2,19 +2,26 @@ import fs from 'node:fs/promises'
 import os from 'node:os'
 import path from 'node:path'
 import { execFileSync } from 'node:child_process'
-import { checksumFile, docsRoot, findDocxFiles, publicDocumentsRoot } from './lib/content-utils.mjs'
+import { checksumFile, docsRoot, fileExists, findDocxFiles, publicDocumentsRoot } from './lib/content-utils.mjs'
 
 if (process.platform !== 'darwin') {
   throw new Error('PDF export requires Microsoft Word on macOS. Export and commit PDFs before building on other platforms.')
 }
 
-const manifest = {}
+const filter = process.argv.slice(2).join(' ').trim().toLowerCase()
+const manifestPath = path.join(publicDocumentsRoot, 'pdf-manifest.json')
+const manifest = filter && await fileExists(manifestPath)
+  ? JSON.parse(await fs.readFile(manifestPath, 'utf8'))
+  : {}
+const sources = await findDocxFiles(path.join(docsRoot, 'writing'))
+const matchingSources = filter ? sources.filter(source => source.toLowerCase().includes(filter)) : sources
+if (filter && !matchingSources.length) throw new Error(`No writing document matched "${filter}".`)
 const temporaryDirectory = await fs.mkdtemp(path.join(os.tmpdir(), 'portfolio-word-pdf-'))
 try {
-  for (const source of await findDocxFiles(path.join(docsRoot, 'writing'))) {
+  for (const source of matchingSources) {
     const relative = path.relative(docsRoot, source).split(path.sep).join('/')
     const destination = path.join(publicDocumentsRoot, relative.replace(/\.docx$/i, '.pdf'))
-    const temporarySource = path.join(temporaryDirectory, `export-${path.basename(source)}`)
+    const temporarySource = path.join(temporaryDirectory, `${path.basename(temporaryDirectory)}-${path.basename(source)}`)
     const temporaryPdf = temporarySource.replace(/\.docx$/i, '.pdf')
     await fs.copyFile(source, temporarySource)
     await fs.mkdir(path.dirname(destination), { recursive: true })
@@ -49,7 +56,7 @@ end run
     }
     console.log(`Exported Word PDF: ${relative}`)
   }
-  await fs.writeFile(path.join(publicDocumentsRoot, 'pdf-manifest.json'), `${JSON.stringify(manifest, null, 2)}\n`)
+  await fs.writeFile(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`)
 } finally {
   await fs.rm(temporaryDirectory, { recursive: true, force: true })
 }

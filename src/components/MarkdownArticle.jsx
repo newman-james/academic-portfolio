@@ -76,7 +76,7 @@ function rehypeArticleFigures() {
           const captionText = caption?.children?.map((child) => child.value || child.children?.map((part) => part.value || '').join('') || '').join('') || ''
           node.tagName = 'figure'
           node.properties = { className: ['article-figure'] }
-          if (caption?.tagName === 'p' && /^Figure \d+\./.test(captionText)) {
+          if (caption?.tagName === 'p' && /^Figure \d+(?:\.|\s|(?=[A-Z]))/.test(captionText)) {
             node.children.push({ ...caption, tagName: 'figcaption' })
             parent.children.splice(index + 1, nextIndex - index)
           }
