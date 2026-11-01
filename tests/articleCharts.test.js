@@ -4,17 +4,18 @@ import test from 'node:test'
 import { parseMarkdownFile } from '../scripts/lib/content-utils.mjs'
 import { chartXLabel, parseArticleChart } from '../src/utils/articleCharts.js'
 
-test('all seven article figures plot their matching datasets', async () => {
+test('all seven article figures retain their original chart types and orientations', async () => {
   const articles = [
-    ['singapore-exchange-rate-policy.md', [26]],
-    ['the-political-economy-of-hong-kong-s-housing-crisis.md', [28, 28]],
-    ['european-industrial-policy-and-the-economic-consequences-of-chinese-ev-competition.md', [10, 12]],
-    ['financing-britain-s-future-6.md', [17, 18]],
+    ['singapore-exchange-rate-policy.md', [26], [['line', undefined]]],
+    ['the-political-economy-of-hong-kong-s-housing-crisis.md', [28, 28], [['line', undefined], ['line', undefined]]],
+    ['european-industrial-policy-and-the-economic-consequences-of-chinese-ev-competition.md', [10, 12], [['line', undefined], ['bar', 'horizontal']]],
+    ['financing-britain-s-future-6.md', [17, 18], [['bar', 'vertical'], ['bar', 'vertical']]],
   ]
-  for (const [file, counts] of articles) {
+  for (const [file, counts, chartStyles] of articles) {
     const entry = parseMarkdownFile(await readFile(new URL(`../content/writing/${file}`, import.meta.url), 'utf8'))
     assert.equal(Object.keys(entry.data.figureDatasets).length, counts.length)
     for (const [index, dataset] of Object.values(entry.data.figureDatasets).entries()) {
+      assert.deepEqual([dataset.chart.type, dataset.chart.orientation], chartStyles[index], `${file}: figure ${index + 1}`)
       const csv = await readFile(new URL(`../public/datasets/${dataset.file}`, import.meta.url), 'utf8')
       const rows = parseArticleChart(csv, dataset.chart)
       assert.equal(rows.length, counts[index], `${file}: ${dataset.file}`)
@@ -38,6 +39,8 @@ test('rejects missing columns, invalid values and duplicate observations', () =>
   assert.throws(() => parseArticleChart('Year,Value,Series\n2020,-1,A', config), /Invalid chart value/)
   assert.throws(() => parseArticleChart('Year,Value,Series\n2020,1,A\n2020,2,A', config), /Duplicate chart observation/)
   assert.throws(() => parseArticleChart('', {}), /Chart configuration/)
+  assert.throws(() => parseArticleChart('Year,Value\n2020,1', { type: 'bar', orientation: 'diagonal', x: 'Year', y: 'Value', yLabel: 'Value' }), /Chart configuration/)
+  assert.throws(() => parseArticleChart('Year,Value\n2020,1', { type: 'line', orientation: 'vertical', x: 'Year', y: 'Value', yLabel: 'Value' }), /Chart configuration/)
   assert.equal(chartXLabel('01/09/2025', 'month'), 'Sep 25')
 })
 

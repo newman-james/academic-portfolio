@@ -28,7 +28,8 @@ figureDatasets:
     caption: London IPO activity
     file: figure1_london_ipo_2010_2026_preliminary.csv
     chart:
-      type: line
+      type: bar
+      orientation: vertical
       x: year
       y: ipo_count
       yLabel: Number of IPOs
@@ -38,7 +39,8 @@ figureDatasets:
     caption: The decline of UK pension fund investment in domestic equities
     file: figure2_uk_db_domestic_equities_2006_2025_completed.csv
     chart:
-      type: line
+      type: bar
+      orientation: vertical
       x: year
       y: UK equities (% of total DB pension assets)
       yLabel: UK equities (% of total DB pension assets)

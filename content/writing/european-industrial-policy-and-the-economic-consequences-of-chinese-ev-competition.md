@@ -41,6 +41,7 @@ figureDatasets:
     file: figure2_china_manufactured_bev_share_selected_eu_2024h1_rawgraphs.csv
     chart:
       type: bar
+      orientation: horizontal
       x: Country
       y: Share_pct
       yLabel: Share (%)
