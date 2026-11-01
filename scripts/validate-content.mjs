@@ -1,5 +1,6 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
+import { formatReferenceCitations } from '../src/utils/referenceCitations.js'
 import {
   contentRoot,
   docsRoot,
@@ -92,6 +93,18 @@ async function main() {
 
     if (!supportedStatuses.includes(entry.data.status)) {
       issues.push(`${relativePath}: status must be one of ${supportedStatuses.join(', ')}`)
+    }
+
+    if (collection === 'writing' && entry.data.referenceCitations !== undefined) {
+      if (entry.data.sourceDocument && await fileExists(path.join(docsRoot, entry.data.sourceDocument)) &&
+          entry.data.sourceChecksum !== await checksumFile(path.join(docsRoot, entry.data.sourceDocument))) {
+        issues.push(`${relativePath}: source Word document changed; run npm run docs:convert and review citation mappings`)
+      }
+      try {
+        formatReferenceCitations(entry.content, entry.data.referenceCitations)
+      } catch (error) {
+        issues.push(`${relativePath}: ${error.message}`)
+      }
     }
 
     if (!entry.data.sourceDocument) {

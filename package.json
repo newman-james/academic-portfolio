@@ -8,6 +8,7 @@
     "docs:convert": "node scripts/convert-docs.mjs",
     "docs:validate": "node scripts/validate-content.mjs",
     "docs:pdf": "node scripts/export-pdfs.mjs",
+    "test": "node --test",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"

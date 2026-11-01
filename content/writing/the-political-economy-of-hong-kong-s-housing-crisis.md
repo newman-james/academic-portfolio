@@ -3,10 +3,12 @@ id: writing-the-political-economy-of-hong-kong-s-housing-crisis
 slug: the-political-economy-of-hong-kong-s-housing-crisis
 title: The political economy of Hong Kong's housing crisis
 subtitle: ''
-summary: An exploration of how land, institutions and public policy shape housing affordability in Hong Kong.
+summary: >-
+  An exploration of how land, institutions and public policy shape housing
+  affordability in Hong Kong.
 subject: Political economy
 type: Essay
-date: '2026-10'
+date: 2026-10
 readingTime: 5
 featured: false
 status: published
@@ -19,6 +21,30 @@ relatedWriting: []
 context: ''
 teacherFeedback: ''
 reflection: ''
+referenceCitations:
+  '1':
+    reference: 'Cheng, Ruijie.'
+    note: 'Cheng, ‘A Tale of Two Cities’, 5, 15.'
+  '2':
+    reference: 'Brown, Stephen,'
+    note: 'Brown and Loh, _Hong Kong: The Political Economy of Land_, 1.'
+  '3':
+    reference: 'Lee, Ada H. Y.,'
+    note: 'Lee and Allmendinger, ‘“Consensus” as a Tool of Foreclosure’, 21.'
+  '4':
+    reference: Housing Bureau. _Housing in Figures 2026_
+    note: 'Housing Bureau, _Housing in Figures 2026_, 1.'
+  '5':
+    reference: Housing Bureau. ‘Housing Bureau - Publications
+    note: >-
+      Housing Bureau, ‘Housing Bureau - Publications - Housing - Public Housing
+      Production Forecast’.
+  '6':
+    reference: 'Wong, Michael B.'
+    note: 'Wong, ‘Subsidize Rent or Subsidize Homeownership?’, 13.'
+  '7':
+    reference: 'Ronald, Richard,'
+    note: 'Ronald et al., ‘Housing Opportunities and Family Reciprocity’, 1037–1038.'
 sourceChecksum: 0ef47c3e7a638a7ceb8da38a0e9df25c3688f5c866887b05a5e83bc158f1d094
 ---
 Hong Kong presents an economic contradiction. As one of Asia's leading financial centres, it has accumulated considerable wealth, attracted international investment and established a reputation for free-market economics. Yet affordable housing remains beyond the reach of many residents. Seeing this first hand I find this contrast particularly striking. The city's prosperity is evident in its financial institutions and impressive skyline, but less apparent in the living conditions of some households. I would argue that Hong Kong's housing crisis cannot be explained by geographical scarcity alone. It also reflects the political institutions and economic incentives governing land, property development and housing provision.

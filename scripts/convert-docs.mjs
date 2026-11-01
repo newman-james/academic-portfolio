@@ -114,6 +114,7 @@ function createWritingFrontmatter(existingData, metadata) {
     context: existingData.context || '',
     teacherFeedback: existingData.teacherFeedback || '',
     reflection: existingData.reflection || '',
+    ...(existingData.referenceCitations !== undefined ? { referenceCitations: existingData.referenceCitations } : {}),
     sourceChecksum: metadata.checksum,
   }
 }
@@ -196,7 +197,7 @@ async function copyLinkedDatasets(markdown) {
   }
 }
 
-async function convertOneFile(sourcePath) {
+async function convertOneFile(sourcePath, force = false) {
   const { collection, defaultStatus, relativePath } = getCollectionFromSourcePath(sourcePath)
   const basename = path.basename(sourcePath, path.extname(sourcePath))
   const slug = slugify(basename)
@@ -211,7 +212,7 @@ async function convertOneFile(sourcePath) {
     const existingRaw = await fs.readFile(targetMarkdownPath, 'utf8')
     const existingFile = parseMarkdownFile(existingRaw)
 
-    if (existingFile.data.sourceChecksum === checksum) {
+    if (!force && existingFile.data.sourceChecksum === checksum) {
       await copyLinkedDatasets(existingFile.content)
       await fs.copyFile(sourcePath, publicSourcePath)
       return { status: 'skipped', sourcePath, targetMarkdownPath }
@@ -253,7 +254,9 @@ async function convertOneFile(sourcePath) {
 }
 
 async function main() {
-  const requestedFilter = process.argv.slice(2).join(' ').trim().toLowerCase()
+  const args = process.argv.slice(2)
+  const force = args.includes('--force')
+  const requestedFilter = args.filter((arg) => arg !== '--force').join(' ').trim().toLowerCase()
   const allDocxFiles = await findDocxFiles(docsRoot)
   const matchingFiles = requestedFilter
     ? allDocxFiles.filter((filePath) => filePath.toLowerCase().includes(requestedFilter))
@@ -272,7 +275,7 @@ async function main() {
 
   for (const sourcePath of matchingFiles) {
     try {
-      const result = await convertOneFile(sourcePath)
+      const result = await convertOneFile(sourcePath, force)
       results[result.status].push(result)
       const relativeSourcePath = path.relative(projectRoot, sourcePath)
       const relativeTargetPath = path.relative(projectRoot, result.targetMarkdownPath)

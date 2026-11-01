@@ -4,6 +4,7 @@ import { useId, useRef } from 'react'
 import ReactMarkdown from 'react-markdown'
 import rehypeRaw from 'rehype-raw'
 import remarkGfm from 'remark-gfm'
+import { formatReferenceCitations } from '../utils/referenceCitations.js'
 
 function flattenChildren(children) {
   return Array.isArray(children)
@@ -88,7 +89,7 @@ function rehypeArticleFigures() {
   }
 }
 
-function MarkdownArticle({ content, className = 'article-body' }) {
+function MarkdownArticle({ content, className = 'article-body', referenceCitations }) {
   return (
     <div className={className}>
       <ReactMarkdown
@@ -128,7 +129,7 @@ function MarkdownArticle({ content, className = 'article-body' }) {
           ),
         }}
       >
-        {content}
+        {formatReferenceCitations(content, referenceCitations)}
       </ReactMarkdown>
     </div>
   )

@@ -56,6 +56,7 @@ npm run docs:convert
 npm run docs:convert -- "Essay Draft.docx"
 npm run docs:validate
 npm run docs:pdf
+npm test
 npm run build
 npm run lint
 ```
@@ -73,8 +74,19 @@ Every push to `main` rebuilds the site and publishes the contents of `dist/` to 
 
 Place James's original Word documents (`.docx`) in `docs/writing/`. The three original essays replace the sample content. Curated publication dates use `YYYY-MM` when only a month is known; the UI displays the month and year without inventing a day.
 
-Word footnotes are converted to Markdown footnotes for review. The AI essay's online edition uses superscript citation numbers linked directly to its numbered references, without a separate Notes section. References retain source formatting and DOI links. These are presentation features, not a claim that the portfolio has been peer reviewed.
+Word footnotes are converted to Markdown footnotes. Essays with a curated
+`referenceCitations` mapping use superscript citation numbers linked directly
+to numbered references in order of first citation, without a separate Notes
+section. Map each Word footnote number to the unique opening text of its
+bibliography entry and its exact converted note text; page details remain in
+the citation's accessible label. Content validation rejects stale source files
+and missing, changed or ambiguous mappings.
+Unmapped essays retain their normal Word-derived notes. References retain
+source formatting and DOI links. These are presentation features, not a claim
+that the portfolio has been peer reviewed.
 
+Run `npm run docs:convert -- --force "filename"` to regenerate content even when
+the Word file has not changed. Curated citation mappings survive regeneration.
 Word's cached figure sequence numbers are preserved in generated captions. Update
 figure fields in Word before conversion so the saved numbers are current.
 
