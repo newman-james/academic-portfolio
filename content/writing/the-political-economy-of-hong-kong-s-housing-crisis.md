@@ -49,11 +49,26 @@ figureDatasets:
   '1':
     caption: Comparative housing affordability in Hong Kong and Singapore
     file: hong_kong_singapore_housing_affordability_rawgraphs_2010_2025.csv
+    chart:
+      type: line
+      x: Year
+      series: City
+      y: Median_multiple
+      yLabel: Median multiple
+      status: Status
+      note: Singapore's 2012 estimate is provisional. From 2023, the Singapore series uses a changed basis; the Hong Kong and Singapore measures are not tenure-matched.
   '2':
     caption: >-
       Government land-premium revenue and private residential property prices in
       Hong Kong
     file: figure2_rawgraphs_indexed_comparison_2012_2025.csv
+    chart:
+      type: line
+      x: Year
+      series: Series
+      y: Index_2012_100
+      yLabel: Index (2012 = 100)
+      note: Land receipts use fiscal years and property prices use calendar years, both labelled by the starting year.
 sourceChecksum: 0ef47c3e7a638a7ceb8da38a0e9df25c3688f5c866887b05a5e83bc158f1d094
 ---
 Hong Kong presents an economic contradiction. As one of Asia's leading financial centres, it has accumulated considerable wealth, attracted international investment and established a reputation for free-market economics. Yet affordable housing remains beyond the reach of many residents. Seeing this first hand I find this contrast particularly striking. The city's prosperity is evident in its financial institutions and impressive skyline, but less apparent in the living conditions of some households. I would argue that Hong Kong's housing crisis cannot be explained by geographical scarcity alone. It also reflects the political institutions and economic incentives governing land, property development and housing provision.

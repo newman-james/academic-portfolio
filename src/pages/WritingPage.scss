@@ -417,6 +417,88 @@
     max-inline-size: 100%;
   }
 
+  .article-chart {
+    --article-chart-color-1: #0043ce;
+    --article-chart-color-2: #8a3800;
+    --article-chart-color-3: #6929c4;
+    --article-chart-color-4: #005d5d;
+    --article-chart-color-5: #9f1853;
+    min-inline-size: 0;
+
+    :root[data-carbon-theme='g100'] & {
+      --article-chart-color-1: #78a9ff;
+      --article-chart-color-2: #ffb784;
+      --article-chart-color-3: #be95ff;
+      --article-chart-color-4: #3ddbd9;
+      --article-chart-color-5: #ff7eb6;
+    }
+  }
+
+  .article-chart__unit,
+  .article-chart__note {
+    margin-block: $spacing-03;
+    color: var(--cds-text-secondary);
+    @include type-style('body-compact-01');
+  }
+
+  .article-chart__legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $spacing-03 $spacing-05;
+    padding: 0;
+    margin: $spacing-03 0;
+    list-style: none;
+
+    li {
+      display: flex;
+      align-items: center;
+      gap: $spacing-03;
+      @include type-style('body-compact-01');
+    }
+  }
+
+  .article-chart__swatch {
+    inline-size: 1.5rem;
+    border-block-start: 3px solid;
+
+    &--dashed {
+      border-block-start-style: dashed;
+    }
+  }
+
+  .article-chart__scroll {
+    max-inline-size: 100%;
+    overflow-x: auto;
+  }
+
+  .article-chart__svg {
+    display: block;
+    inline-size: 100%;
+    min-inline-size: 40rem;
+    block-size: auto;
+  }
+
+  .article-chart__grid {
+    stroke: var(--cds-border-subtle-01);
+    stroke-width: 1;
+  }
+
+  .article-chart__axis,
+  .article-chart__value {
+    fill: var(--cds-text-primary);
+    font-size: 13px;
+  }
+
+  .article-chart__data {
+    margin-block: $spacing-03;
+    @include type-style('body-compact-01');
+
+    summary {
+      cursor: pointer;
+      color: var(--cds-link-primary);
+    }
+  }
+
   .article-figure img {
     display: block;
     inline-size: 100%;
@@ -472,6 +554,12 @@
       max-block-size: 100%;
       object-fit: contain;
     }
+  }
+
+  .article-image-dialog-content.article-chart__scroll {
+    display: block;
+    flex: 1;
+    inline-size: 100%;
   }
 
   p,

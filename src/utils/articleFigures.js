@@ -44,6 +44,9 @@ export function rehypeArticleFigures() {
           node.properties = { className: ['article-figure'] }
           if (match) {
             node.properties.dataFigureNumber = match[1]
+            for (const child of node.children) {
+              if (child.tagName === 'img') child.properties.dataFigureNumber = match[1]
+            }
             const remainder = stripPrefix(caption.children, match[0].length).nodes
             node.children.push({
               ...caption,

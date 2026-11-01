@@ -21,6 +21,17 @@ relatedWriting: []
 context: ''
 teacherFeedback: ''
 reflection: ''
+figureDatasets:
+  '1':
+    caption: Singapore headline and MAS core inflation
+    file: singapore-sras.csv
+    chart:
+      type: line
+      x: month
+      xFormat: month
+      series: measure
+      y: inflation_pct
+      yLabel: Inflation (year-on-year %)
 sourceChecksum: 74c9051349c1653e093536dc8646164ce5e8502cbabbefbb97e884b02fba7406
 ---
 Singapore’s central bank tightened its monetary policy settings, flagging that the surging energy prices caused by the Iran war could drive up inflation. One thing to note: Singapore’s primary monetary policy tool isn’t like most countries. Conventionally, most central banks control inflation through manipulating domestic interest rates. However, as Singapore is a highly open economy in which imports account for a significant proportion of domestic consumption, managing exchange rates is a more effective means of controlling imported inflation.

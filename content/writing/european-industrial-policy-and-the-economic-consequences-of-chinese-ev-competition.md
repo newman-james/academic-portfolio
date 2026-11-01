@@ -28,9 +28,22 @@ figureDatasets:
   '1':
     caption: "China's share of EU battery-electric vehicle imports"
     file: figure1_eu_battery_electric_imports_china_share_2021_2025_rawgraphs.csv
+    chart:
+      type: line
+      x: Year
+      series: Origin
+      y: Share_pct
+      yLabel: Share (%)
+      status: Status
+      note: The 2021 and 2022 values are approximate and reconstructed. The 2025 value cites a release dated October 2026.
   '2':
     caption: 'China-manufactured electric vehicles as a share of new battery-electric vehicle sales'
     file: figure2_china_manufactured_bev_share_selected_eu_2024h1_rawgraphs.csv
+    chart:
+      type: bar
+      x: Country
+      y: Share_pct
+      yLabel: Share (%)
 referenceCitations:
   '1':
     reference: 'European Commission.'

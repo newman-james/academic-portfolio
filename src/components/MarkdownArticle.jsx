@@ -6,6 +6,7 @@ import rehypeRaw from 'rehype-raw'
 import remarkGfm from 'remark-gfm'
 import { formatReferenceCitations } from '../utils/referenceCitations.js'
 import { rehypeArticleFigures } from '../utils/articleFigures.js'
+import ArticleChart from './ArticleChart.jsx'
 
 function flattenChildren(children) {
   return Array.isArray(children)
@@ -92,7 +93,7 @@ function MarkdownArticle({ content, className = 'article-body', referenceCitatio
           figure: ({ children, node }) => (
             <figure className="article-figure">
               {children}
-              {figureDatasets?.[node.properties.dataFigureNumber] ? (
+              {figureDatasets?.[node.properties.dataFigureNumber] && !content.includes(`href="/datasets/${figureDatasets[node.properties.dataFigureNumber].file}"`) ? (
                 <div className="article-figure__dataset">
                   <a
                     href={assetUrl(`/datasets/${figureDatasets[node.properties.dataFigureNumber].file}`)}
@@ -105,7 +106,11 @@ function MarkdownArticle({ content, className = 'article-body', referenceCitatio
               ) : null}
             </figure>
           ),
-          img: ({ alt, src, title }) => <ArticleImage alt={alt} src={src} title={title} />,
+          img: ({ alt, src, title, node }) => {
+            const number = node.properties.dataFigureNumber
+            const dataset = figureDatasets?.[number]
+            return dataset ? <ArticleChart dataset={dataset} number={number} /> : <ArticleImage alt={alt} src={src} title={title} />
+          },
           table: ({ children }) => (
             <div className="article-table-scroll" tabIndex={0} role="region" aria-label="Article data table; scroll horizontally if needed">
               <table>{children}</table>

@@ -2,6 +2,7 @@ import fs from 'node:fs/promises'
 import path from 'node:path'
 import { formatReferenceCitations } from '../src/utils/referenceCitations.js'
 import { validateFigureDatasets } from '../src/utils/articleFigures.js'
+import { parseArticleChart } from '../src/utils/articleCharts.js'
 import {
   contentRoot,
   docsRoot,
@@ -122,6 +123,12 @@ async function main() {
             issues.push(`${relativePath}: missing figure dataset ${dataset.file}; run npm run docs:convert`)
           } else if (await checksumFile(source) !== await checksumFile(published)) {
             issues.push(`${relativePath}: stale figure dataset ${dataset.file}; run npm run docs:convert`)
+          } else {
+            try {
+              parseArticleChart(await fs.readFile(source, 'utf8'), dataset.chart)
+            } catch (error) {
+              issues.push(`${relativePath}: invalid chart ${dataset.file}: ${error.message}`)
+            }
           }
         }
       } catch (error) {

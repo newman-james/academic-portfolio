@@ -16,6 +16,7 @@
   "dependencies": {
     "@carbon/icons-react": "^11.83.0",
     "@carbon/react": "^1.111.1",
+    "d3-dsv": "^3.0.1",
     "gray-matter": "^4.0.3",
     "jszip": "^3.10.2",
     "mammoth": "^1.12.0",
