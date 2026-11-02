@@ -2,7 +2,7 @@ import assert from 'node:assert/strict'
 import { readFile } from 'node:fs/promises'
 import test from 'node:test'
 import { parseMarkdownFile } from '../scripts/lib/content-utils.mjs'
-import { chartXLabel, parseArticleChart } from '../src/utils/articleCharts.js'
+import { carbonChartOptions, chartXLabel, parseArticleChart, toCarbonChartData } from '../src/utils/articleCharts.js'
 
 test('all seven article figures retain their original chart types and orientations', async () => {
   const articles = [
@@ -20,8 +20,39 @@ test('all seven article figures retain their original chart types and orientatio
       const rows = parseArticleChart(csv, dataset.chart)
       assert.equal(rows.length, counts[index], `${file}: ${dataset.file}`)
       assert.ok(rows.every(row => Number.isFinite(row.y)))
+      const data = toCarbonChartData(rows, dataset.chart)
+      assert.deepEqual(data.map(row => row.value), rows.map(row => row.y))
+      assert.deepEqual(data.map(row => row.group), rows.map(row => row.series || dataset.chart.yLabel))
+      const options = carbonChartOptions(dataset.chart, dataset.caption, 'g100', rows)
+      const horizontal = dataset.chart.type === 'bar' && dataset.chart.orientation !== 'vertical'
+      assert.equal(options.axes[horizontal ? 'left' : 'bottom'].mapsTo, 'category')
+      assert.equal(options.axes[horizontal ? 'bottom' : 'left'].mapsTo, 'value')
+      assert.equal(options.theme, 'g100')
     }
   }
+})
+
+test('Carbon chart data retains formatted labels and separate series', () => {
+  const rows = [
+    { x: '01/09/2025', series: 'Headline', y: 0.7 },
+    { x: '01/09/2025', series: 'Core', y: 0.4 },
+  ]
+  assert.deepEqual(toCarbonChartData(rows, { xFormat: 'month', yLabel: 'Inflation' }), [
+    { category: 'Sep 25', group: 'Headline', value: 0.7 },
+    { category: 'Sep 25', group: 'Core', value: 0.4 },
+  ])
+})
+
+test('Carbon toolbar provides tables, fullscreen, source data and chart exports', () => {
+  const config = { type: 'bar', orientation: 'vertical', x: 'Year', y: 'Value', yLabel: 'Value' }
+  const downloadSource = () => {}
+  const options = carbonChartOptions(config, 'Figure 1', 'g100', [{ x: '2020', y: 1 }], downloadSource)
+  assert.equal(options.toolbar.enabled, true)
+  assert.deepEqual(options.toolbar.controls.map(control => control.type), [
+    'Show as data-table', 'Make fullscreen', 'Custom', 'Export as CSV', 'Export as PNG', 'Export as JPG',
+  ])
+  assert.equal(options.toolbar.controls[2].clickFunction, downloadSource)
+  assert.deepEqual(options.tabularRepModal.tableHeadingFormatter(), ['Series', 'Year', 'Value'])
 })
 
 test('retains exact dataset values and statuses, including reconstructed figures', async () => {

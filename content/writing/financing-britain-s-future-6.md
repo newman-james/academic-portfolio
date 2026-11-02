@@ -27,6 +27,7 @@ figureDatasets:
   '1':
     caption: London IPO activity
     file: figure1_london_ipo_2010_2026_preliminary.csv
+    description: Annual number of initial public offerings on the London Stock Exchange.
     chart:
       type: bar
       orientation: vertical
@@ -38,6 +39,7 @@ figureDatasets:
   '2':
     caption: The decline of UK pension fund investment in domestic equities
     file: figure2_uk_db_domestic_equities_2006_2025_completed.csv
+    description: 'Source: Pension Protection Fund, Purple Book'
     chart:
       type: bar
       orientation: vertical

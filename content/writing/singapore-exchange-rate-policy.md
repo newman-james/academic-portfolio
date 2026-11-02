@@ -25,6 +25,7 @@ figureDatasets:
   '1':
     caption: Singapore headline and MAS core inflation
     file: singapore-sras.csv
+    description: The chart illustrates inflation trends during a period of monetary policy adjustments
     chart:
       type: line
       x: month

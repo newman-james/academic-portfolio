@@ -45,9 +45,13 @@ The reference repo does not currently implement a full automated Word-to-Markdow
 ## Local setup
 
 ```bash
-npm install
+IBM_TELEMETRY_DISABLED=true npm install
 npm run dev
 ```
+
+Carbon Charts includes IBM's install-time telemetry. The command above and
+the deployment workflow disable collection; set `IBM_TELEMETRY_DISABLED=true`
+for dependency installation in other CI environments too.
 
 Other useful commands:
 
@@ -91,12 +95,18 @@ Word's cached figure sequence numbers are preserved in generated captions. Updat
 figure fields in Word before conversion so the saved numbers are current.
 Figure captions share a consistent UI style. For a CSV-driven chart, add a
 `figureDatasets` entry keyed by figure number, with a unique `caption` prefix
-and the CSV `file` name from `docs/data/`. Its `chart` mapping specifies `type`
+and the CSV `file` name from `docs/data/`. The complete Word figure caption
+becomes the chart title rather than appearing a second time below it. When a
+figure has a separate source or explanatory paragraph immediately after its
+caption, set `description` to its opening text; it will appear beneath the
+chart's data qualification in a consistent figure-note style. Validation
+checks the description against the source-derived Markdown. Its `chart` mapping specifies `type`
 (`line` or `bar`), CSV column names `x` and `y`, and `yLabel`; line charts also
 require `series`. Optional `xFormat: month` formats dates in `DD/MM/YYYY` form,
 `status` identifies a CSV status column, and `note` supplies important data
-qualifications. The website plots the CSV, provides a data table, fullscreen
-view and CSV download. Conversion copies the CSV unchanged into
+qualifications. The website plots the CSV with Carbon Charts. Its toolbar provides a data
+table, fullscreen, chart exports, and a download of the original dataset; the
+chart's own CSV export contains only plotted values. Conversion copies the CSV unchanged into
 `public/datasets/`; validation checks the mapping, chart data and source/public
 checksums. These website presentations do not change Word or its native PDF.
 

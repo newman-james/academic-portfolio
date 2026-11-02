@@ -37,3 +37,50 @@ export function chartXLabel(value, format) {
   const [, month, year] = value.split('/')
   return `${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][Number(month) - 1]} ${year.slice(2)}`
 }
+
+export function toCarbonChartData(rows, config) {
+  return rows.map(row => ({
+    group: row.series || config.yLabel,
+    category: chartXLabel(row.x, config.xFormat),
+    value: row.y,
+  }))
+}
+
+export function carbonChartOptions(config, caption, theme, rows, downloadSource) {
+  const horizontal = config.type === 'bar' && config.orientation !== 'vertical'
+  const categoryAxis = { mapsTo: 'category', scaleType: 'labels' }
+  const valueAxis = { mapsTo: 'value', scaleType: 'linear', includeZero: true, title: config.yLabel }
+  const categoryCount = new Set(rows.map(row => row.x)).size
+  return {
+    accessibility: { svgAriaLabel: caption },
+    title: caption,
+    theme,
+    height: horizontal ? `${Math.max(400, categoryCount * 38 + 120)}px` : '400px',
+    axes: horizontal
+      ? { left: categoryAxis, bottom: valueAxis }
+      : { left: valueAxis, bottom: categoryAxis },
+    legend: { enabled: Boolean(config.series), clickable: true, truncation: { type: 'none' } },
+    toolbar: {
+      enabled: true,
+      numberOfIcons: 3,
+      controls: [
+        { type: 'Show as data-table' },
+        { type: 'Make fullscreen' },
+        { type: 'Custom', id: 'toolbar-original-dataset', title: 'Download original dataset (CSV)', text: 'Download original dataset (CSV)', clickFunction: downloadSource },
+        { type: 'Export as CSV', text: 'Export plotted data (CSV)' },
+        { type: 'Export as PNG' },
+        { type: 'Export as JPG' },
+      ],
+    },
+    tabularRepModal: {
+      tableHeadingFormatter: () => [config.series || 'Series', config.x, config.yLabel],
+    },
+    locale: {
+      translations: {
+        toolbar: { exportAsCSV: 'Export plotted data (CSV)' },
+        tabularRep: { downloadAsCSV: 'Download plotted data (CSV)' },
+      },
+    },
+    animations: false,
+  }
+}

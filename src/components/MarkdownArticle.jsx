@@ -5,7 +5,7 @@ import ReactMarkdown from 'react-markdown'
 import rehypeRaw from 'rehype-raw'
 import remarkGfm from 'remark-gfm'
 import { formatReferenceCitations } from '../utils/referenceCitations.js'
-import { rehypeArticleFigures } from '../utils/articleFigures.js'
+import { rehypeArticleFigures, rehypeRemoveMappedDatasetLinks } from '../utils/articleFigures.js'
 import ArticleChart from './ArticleChart.jsx'
 
 function flattenChildren(children) {
@@ -67,7 +67,7 @@ function MarkdownArticle({ content, className = 'article-body', referenceCitatio
   return (
     <div className={className}>
       <ReactMarkdown
-        rehypePlugins={[rehypeRaw, rehypeArticleFigures]}
+        rehypePlugins={[rehypeRaw, [rehypeRemoveMappedDatasetLinks, figureDatasets], [rehypeArticleFigures, figureDatasets]]}
         remarkPlugins={[remarkGfm]}
         remarkRehypeOptions={{ footnoteLabel: 'Notes', footnoteBackLabel: 'Back to citation' }}
         components={{
@@ -90,26 +90,11 @@ function MarkdownArticle({ content, className = 'article-body', referenceCitatio
           h2: ({ children, ...props }) => <h2 id={headingId(children)} {...props}>{children}</h2>,
           h3: ({ children, ...props }) => <h3 id={headingId(children)} {...props}>{children}</h3>,
           h4: ({ children, ...props }) => <h4 id={headingId(children)} {...props}>{children}</h4>,
-          figure: ({ children, node }) => (
-            <figure className="article-figure">
-              {children}
-              {figureDatasets?.[node.properties.dataFigureNumber] && !content.includes(`href="/datasets/${figureDatasets[node.properties.dataFigureNumber].file}"`) ? (
-                <div className="article-figure__dataset">
-                  <a
-                    href={assetUrl(`/datasets/${figureDatasets[node.properties.dataFigureNumber].file}`)}
-                    download={figureDatasets[node.properties.dataFigureNumber].file}
-                    aria-label={`Download Figure ${node.properties.dataFigureNumber} dataset (CSV)`}
-                  >
-                    Download dataset (CSV)
-                  </a>
-                </div>
-              ) : null}
-            </figure>
-          ),
+          figure: ({ children }) => <figure className="article-figure">{children}</figure>,
           img: ({ alt, src, title, node }) => {
             const number = node.properties.dataFigureNumber
             const dataset = figureDatasets?.[number]
-            return dataset ? <ArticleChart dataset={dataset} number={number} /> : <ArticleImage alt={alt} src={src} title={title} />
+            return dataset ? <ArticleChart dataset={dataset} number={number} title={node.properties.dataFigureTitle} /> : <ArticleImage alt={alt} src={src} title={title} />
           },
           table: ({ children }) => (
             <div className="article-table-scroll" tabIndex={0} role="region" aria-label="Article data table; scroll horizontally if needed">
